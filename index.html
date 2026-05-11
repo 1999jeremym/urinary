@@ -123,6 +123,14 @@ const MACRO={
   hilum:{lbl:'Hilum',col:'#78716c',ac:{n:'Renal Hilum',d:"Medial indentation where renal artery, renal vein, ureter, lymphatics, and nerves enter/exit the kidney. The kidney's gateway. Protected within renal sinus filled with fat tissue."},si:{n:'The Loading Dock',d:'The one entry/exit point on the kidney. Blood in (artery), blood out (vein), urine out (ureter), plus nerves and lymph vessels all pass through this notch. Surrounded by protective fat padding.'}},
   papilla:{lbl:'Papilla',col:'#fb923c',ac:{n:'Renal Papilla',d:'The tip (apex) of each renal pyramid projecting into a minor calyx. Contains openings of collecting ducts (area cribrosa) where final urine drips into the calyx. Damaged in papillary necrosis (diabetes, sickle cell, NSAIDs).'},si:{n:'The Drip Tip',d:'The pointy end of each pyramid poking into a tiny cup (minor calyx). Tiny holes here let finished urine drip out of the collecting ducts. Damage from diabetes or painkillers blocks urine drainage.'}},
   column:{lbl:'Column',col:'#a3a3a3',ac:{n:'Renal Column (of Bertin)',d:'Extensions of cortical tissue dipping between adjacent pyramids. Contain interlobar blood vessels and connective tissue. Separate and support individual pyramids structurally.'},si:{n:'The Dividing Walls',d:'Cortex tissue that reaches down between pyramids like walls between slices of pie. Blood vessels run through these walls to supply different kidney sections. They keep pyramids separated and supported.'}},
+  interlobar:{lbl:'Interlobar Art.',col:'#f87171',ac:{n:'Interlobar Arteries & Veins',d:'Run between renal pyramids through the renal columns. Branch from segmental arteries (off the renal artery) and travel toward the corticomedullary junction where they arch into arcuate arteries. Interlobar veins mirror the arterial path, draining into the renal vein.'},si:{n:'The Column Roads',d:'Blood vessels running between pyramids like highways between city blocks. They carry blood deeper into the kidney, branching smaller and smaller until they reach the junction where the outer and inner zones meet.'}},
+  arcuate:{lbl:'Arcuate Art.',col:'#fbbf24',ac:{n:'Arcuate Arteries & Veins',d:'Arc along the corticomedullary junction (the border between cortex and medulla). Branch from interlobar arteries and give rise to cortical radiate arteries that ascend into the cortex to feed afferent arterioles of individual nephrons. Arcuate veins run parallel, draining the cortex.'},si:{n:'The Curved Ring Roads',d:'Curved vessels that sit right at the border between the outer and inner kidney zones. They arch over each pyramid base and send smaller branches upward into the cortex — like ring roads distributing traffic to every neighbourhood (nephron).'}},
+  interlobular:{lbl:'Interlobular Art.',col:'#fca5a5',ac:{n:'Interlobular (Cortical Radiate) Arteries',d:'Finest named branches of the renal arterial tree. Arise from arcuate arteries and radiate outward through the cortex toward the capsule. Each gives off multiple afferent arterioles, each supplying one glomerulus. Also called cortical radiate arteries. Collectively supply all ~1 million nephrons.'},si:{n:'The Final Delivery Roads',d:'The smallest named arteries before blood reaches individual nephrons. They fan out through the outer kidney like spokes of a wheel — each spoke drops off blood at multiple nephron doorsteps. Last step before filtration actually begins.'}},
+  minor_calyx:{lbl:'Minor Calyx',col:'#fcd34d',ac:{n:'Minor Calyx',d:'Small cup-shaped chamber collecting urine dripping from one renal papilla. 8–18 per kidney, one per pyramid. Lined with transitional epithelium (urothelium) that stretches as urine accumulates. Minor calyces converge to form major calyces. Dilation = hydronephrosis, often from a stone blocking the ureteropelvic junction.'},si:{n:'The Little Catching Cups',d:'A tiny cup-shaped collector at each pyramid tip — like a shot glass catching drips from a tap. One cup per pyramid, 8–18 total. When a kidney stone blocks the exit, these cups balloon up with backed-up urine.'}},
+  major_calyx:{lbl:'Major Calyx',col:'#f59e0b',ac:{n:'Major Calyx',d:'Larger collecting chamber formed by 3–4 minor calyces merging. 2–3 major calyces per kidney. Funnel urine into the renal pelvis. Visible on imaging — dilated major calyces on ultrasound or CT indicate downstream obstruction (hydronephrosis, stone, tumour).'},si:{n:'The Big Collection Bucket',d:'Every 3–4 small cups pour into a bigger bucket (major calyx). 2–3 per kidney. They all drain into the main tank (renal pelvis). On an ultrasound or CT scan, blocked major calyces look like black balloons filling with urine.'}},
+  inf_capsule:{lbl:'Inf. Capsule',col:'#94a3b8',ac:{n:'Inferior Renal Capsule',d:'Lower portion of the fibrous renal capsule. The capsule is a tough, fibrous envelope encasing the entire kidney, continuous throughout. The inferior pole region is clinically relevant — it\'s the most accessible to biopsy under ultrasound guidance, and the first area palpable on abdominal exam in nephroptosis (kidney dropping on standing).'},si:{n:'Bottom of the Shell',d:"The lower part of the kidney's tough outer casing. This end points downward and is the easiest to reach by needle for a biopsy, since it can be accessed from the back without hitting major organs."}},
+  sup_capsule:{lbl:'Sup. Capsule',col:'#64748b',ac:{n:'Superior Renal Capsule',d:'Upper portion of the fibrous renal capsule, at the superior pole. The right adrenal gland sits directly on the superior pole of the right kidney; the left adrenal is slightly more medial. Trauma to the superior pole can injure the adrenal simultaneously. The capsule here is tethered by the suprarenal artery branches.'},si:{n:'Top of the Shell',d:"The upper tip of the kidney's outer casing. The adrenal gland (your emergency hormone factory) sits right on top of this. A bad kidney injury up here can also damage the adrenal — two problems at once."}},
+  nephron:{lbl:'Nephron',col:'#0d9488',ac:{n:'Nephron — The Functional Unit',d:'The structural and functional unit of the kidney. Each kidney contains ~1 million nephrons. Each nephron consists of the renal corpuscle (glomerulus + Bowman\'s capsule), PCT, Loop of Henle, DCT, and connecting tubule to the collecting duct. Two types: cortical nephrons (85%, short loops) and juxtamedullary nephrons (15%, long loops — responsible for concentrated urine). You can lose up to 75% before kidney failure is apparent.'},si:{n:'The Whole Filter Machine',d:"One complete kidney-processing unit. You have ~1 million of them per kidney. Think of each nephron as one full water treatment line — from intake (glomerulus) through all the processing steps (tubules) to output (collecting duct). You can destroy 750,000 of these and still function fine. That's why kidney disease is silent until it's serious."}},
 };
 
 const MICRO={
@@ -137,6 +145,11 @@ const MICRO={
   afferent:{lbl:'Afferent Art.',col:'#ef4444',ac:{n:'Afferent Arteriole',d:'Wider arteriole feeding blood INTO the glomerulus from cortical radiate artery. Its wider diameter creates high hydrostatic pressure in glomerulus, driving filtration. Contains JG cells (renin-secreting) and can constrict/dilate to autoregulate GFR.'},si:{n:'The Wide Pipe In',d:"The wider input pipe to the pressure mesh. Because it's wider than the output pipe (efferent), pressure builds up inside the glomerulus — like putting your thumb partially over a hose. Contains the pressure-sensing JG cells that start the RAAS alarm when BP drops."}},
   efferent:{lbl:'Efferent Art.',col:'#f87171',ac:{n:'Efferent Arteriole',d:'Narrower arteriole draining blood FROM the glomerulus. Its smaller diameter maintains high glomerular pressure. Gives rise to peritubular capillaries (cortex) or vasa recta (juxtamedullary nephrons). ACE inhibitors dilate efferent arteriole, reducing glomerular pressure — protects kidneys in CKD.'},si:{n:'The Narrow Pipe Out',d:"The narrower exit pipe from the pressure mesh. Because it's narrower than the input, it acts like a dam — keeping pressure high inside so filtration keeps happening. Then branches into a second capillary network that picks up reabsorbed stuff."}},
   peritubular:{lbl:'Peritubular Cap.',col:'#fb923c',ac:{n:'Peritubular Capillaries',d:'Low-pressure capillary network surrounding PCT and DCT in cortex. Arises from efferent arteriole. Absorbs reabsorbed substances (water, glucose, ions) from tubular cells back into blood. Low hydrostatic + high oncotic pressure favors reabsorption.'},si:{n:'The Reclaim Network',d:'A web of tiny blood vessels wrapping around the tubules. After blood leaves the glomerulus through the narrow pipe, it enters these low-pressure capillaries. Their job: pick up everything the tubules reabsorb (water, sugar, salts) and return it to the bloodstream.'}},
+  jga:{lbl:'JGA',col:'#a78bfa',ac:{n:'Juxtaglomerular Apparatus (JGA)',d:'Pressure-sensing alarm unit where the DCT loops back and contacts its own afferent arteriole. Three components: (1) JG cells — modified smooth muscle in afferent arteriole wall, secrete RENIN when BP drops or SNS activates; (2) Macula densa — specialized DCT cells detecting low NaCl flow, signal JG cells to release renin; (3) Extraglomerular mesangium — support cells. Together they trigger the RAAS cascade (renin → angiotensin I → ACE → angiotensin II → aldosterone) to rescue blood pressure.'},si:{n:'The Alarm System',d:"A tiny sensor cluster where your distal tube touches its own blood supply pipe. Two sensors in one: the JG cells feel blood pressure drop in the artery, and the macula densa cells feel low salt flow in the tube. Either trigger = fire renin alarm = start the RAAS chain reaction = blood pressure climbs back up. It's the kidney's 911 call center."}},
+  cortical_collect:{lbl:'Cortical Coll. Tube',col:'#22d3ee',ac:{n:'Cortical Collecting Tubule',d:'Initial segment of the collecting system, located in the cortex. Connects the DCT to the medullary collecting duct. Also responds to aldosterone (Na+ reabsorption, K+ secretion) and ADH (aquaporin insertion). Histologically has principal cells (Na+/K+ exchange) and intercalated cells (acid-base regulation). Distinct from the medullary collecting duct in its embryological origin (ureteric bud vs. metanephric mesenchyme).'},si:{n:'The First Exit Corridor',d:"The hallway connecting the processing area (DCT) to the final exit pipe (collecting duct). Still under hormone control — aldosterone adjusts salt here, ADH adjusts water. Think of it as the last checkpoint before urine hits the highway."}},
+  loop_henle:{lbl:'Loop of Henle',col:'#6366f1',ac:{n:'Loop of Henle',d:'U-shaped tubule dipping from cortex into medulla and back. Two functional limbs: descending (permeable to water only — water leaves by osmosis) and ascending (impermeable to water — pumps Na+/K+/Cl- out). Together = the countercurrent multiplier. Creates and maintains the medullary osmotic gradient (300 → 1200 mOsm/kg from cortex to papilla tip) that drives passive water reabsorption in the collecting duct. Loop diuretics (furosemide) block the Na-K-2Cl transporter in the ascending limb.'},si:{n:'The U-Turn Salt-Water Trick',d:"A U-shaped pipe that does a clever trick: the down side leaks water out (into salty surroundings), the up side pumps salt out (without letting water follow). The two sides work together to make the core of the kidney saltier and saltier the deeper you go. That salt gradient is what lets ADH concentrate your urine later — no gradient, no concentrated pee."}},
+  arcuate_vein:{lbl:'Arcuate Vein',col:'#60a5fa',ac:{n:'Arcuate Vein',d:'Drains deoxygenated blood from the cortex at the corticomedullary junction, running parallel to the arcuate artery. Collects from interlobular (cortical radiate) veins above and vasa recta ascending from the medulla. Drains into interlobar veins → renal vein → inferior vena cava. The arcuate vein is the venous counterpart of the arcuate artery at the same anatomical level.'},si:{n:'The Curved Return Road',d:"The return lane of the curved highway at the cortex-medulla border. After blood has delivered oxygen to the kidney tissue and been filtered, it travels back through this vein toward the renal vein and then back to the heart. The artery and vein run side-by-side like a two-way highway."}},
+  arcuate_art:{lbl:'Arcuate Artery',col:'#fb923c',ac:{n:'Arcuate Artery',d:'Branch of the interlobar artery, arching along the corticomedullary junction over the base of each renal pyramid. Gives rise to interlobular (cortical radiate) arteries ascending into the cortex. Supplies afferent arterioles of cortical and juxtamedullary nephrons. Also gives off vasa recta for juxtamedullary nephrons. Key landmark on Doppler ultrasound — resistive index (RI) measured here reflects renal vascular resistance.'},si:{n:'The Curved Main Road',d:"A curved artery that sits right at the border between the outer and inner zones of the kidney, arching over each pyramid. It sends branches upward into the cortex to feed nephrons and downward to supply the inner kidney. On an ultrasound with colour Doppler, you can actually see blood pulsing through these curved arteries."}},
 };
 
 const DIR={
@@ -236,239 +249,60 @@ const GFR=[
   {s:'G5',r:'<15',l:'Kidney Failure - Dialysis or Transplant',c:'#dc2626'},
 ];
 
-// SYSTEM MAP
-function MacroKidney({sel,setSel,dark}){
-  const s=k=>sel===k;
-  return(
-    <svg viewBox="0 0 380 420" className="w-full h-full" style={{maxWidth:'340px'}}>
-      <defs>
-        <radialGradient id="gCortex" cx="50%" cy="40%"><stop offset="0%" stopColor="#14b8a6" stopOpacity=".25"/><stop offset="100%" stopColor="#0d9488" stopOpacity=".08"/></radialGradient>
-        <radialGradient id="gMedulla" cx="50%" cy="45%"><stop offset="0%" stopColor="#8b5cf6" stopOpacity=".3"/><stop offset="100%" stopColor="#6d28d9" stopOpacity=".1"/></radialGradient>
-        <linearGradient id="gArtery" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#ef4444"/><stop offset="100%" stopColor="#dc2626"/></linearGradient>
-        <linearGradient id="gVein" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        <linearGradient id="gUreter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#0891b2"/></linearGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      {/* Renal artery + vein entering hilum */}
-      <path d="M10 145 Q60 145 100 158 Q130 168 148 178" fill="none" stroke="url(#gArtery)" strokeWidth="5" strokeLinecap="round" className="flow-line"/>
-      <path d="M10 195 Q60 195 100 185 Q130 178 148 172" fill="none" stroke="url(#gVein)" strokeWidth="5" strokeLinecap="round" className="flow-line" style={{animationDirection:'reverse'}}/>
-      <text x="4" y="139" fill="#ef4444" fontSize="9" fontWeight="600" fontFamily="Inter">Renal Artery</text>
-      <text x="4" y="210" fill="#3b82f6" fontSize="9" fontWeight="600" fontFamily="Inter">Renal Vein</text>
-      {/* Adrenal gland */}
-      <path d="M170 28 Q200 18 230 28 Q225 42 200 46 Q175 42 170 28 Z" fill={dark?'#854d0e':'#fbbf24'} opacity=".5" stroke="#ca8a04" strokeWidth="1"/>
-      <text x="178" y="36" fill="#ca8a04" fontSize="8" fontFamily="Inter">Adrenal Gland</text>
-      {/* Capsule */}
-      <g className={`hs ${s('capsule')?'on':''}`} onClick={()=>setSel('capsule')}>
-        <path d="M190 42 C300 42 320 130 296 230 C272 310 232 340 190 340 C148 340 108 310 84 230 C60 130 80 42 190 42 Z" fill="none" stroke={s('capsule')?'#94a3b8':'#64748b'} strokeWidth={s('capsule')?2.5:1.2} strokeDasharray="5,4"/>
-      </g>
-      {/* Cortex */}
-      <g className={`hs ${s('cortex')?'on':''}`} onClick={()=>setSel('cortex')}>
-        <path d="M190 50 C292 50 310 134 288 228 C266 306 228 332 190 332 C152 332 114 306 92 228 C70 134 88 50 190 50 Z" fill={s('cortex')?'#0d9488':'url(#gCortex)'} stroke={s('cortex')?'#0d9488':'none'} strokeWidth="2" opacity={s('cortex')?.35:1}/>
-        {/* Tiny nephron hints in cortex */}
-        {[[140,80],[230,85],[120,120],[250,125],[135,275],[240,270],[160,300],[220,300]].map(([x,y],i)=>(
-          <circle key={i} cx={x} cy={y} r="3" fill={dark?'#2dd4bf':'#0d9488'} opacity=".25"/>
-        ))}
-      </g>
-      {/* Medulla with pyramid striations */}
-      <g className={`hs ${s('medulla')?'on':''}`} onClick={()=>setSel('medulla')}>
-        <path d="M190 82 C260 82 274 142 254 216 C240 260 216 280 190 286 C164 280 140 260 126 216 C106 142 120 82 190 82 Z" fill={s('medulla')?'#7c3aed':'url(#gMedulla)'} stroke={s('medulla')?'#7c3aed':'none'} strokeWidth="2" opacity={s('medulla')?.4:1}/>
-        {/* Pyramid striations - radial lines converging to papillae */}
-        {[[-30,-20,-10,0,10,20,30]].flat().map((angle,i)=>{
-          const rad=(angle*Math.PI)/180;
-          const x1=190+Math.sin(rad)*75, y1=120+Math.cos(rad)*-20;
-          const x2=190+Math.sin(rad)*20, y2=230+Math.cos(rad)*-10;
-          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={dark?'#6d28d9':'#a78bfa'} strokeWidth=".6" opacity=".4"/>;
-        })}
-      </g>
-      {/* Calyces - multiple minor cups converging */}
-      <g className={`hs ${s('calyces')?'on':''}`} onClick={()=>setSel('calyces')}>
-        {/* Minor calyces - small cups at pyramid tips */}
-        <path d="M160 210 Q155 220 160 230 Q168 236 176 230 Q181 220 176 210 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
-        <path d="M186 205 Q181 215 186 225 Q194 231 202 225 Q207 215 202 205 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
-        <path d="M173 225 Q168 235 173 245 Q181 251 189 245 Q194 235 189 225 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
-        {/* Major calyx merging */}
-        <path d="M168 230 Q178 250 190 252 Q202 250 207 230" fill="none" stroke="#d97706" strokeWidth="1.5" opacity=".6"/>
-      </g>
-      {/* Pelvis - funnel shape */}
-      <g className={`hs ${s('pelvis')?'on':''}`} onClick={()=>setSel('pelvis')}>
-        <path d="M170 248 Q162 260 158 275 Q155 290 165 298 Q178 306 190 300 Q198 294 195 275 Q192 260 184 248 Z" fill={s('pelvis')?'#f97316':'#f97316'} stroke="#ea580c" strokeWidth="1.5" opacity=".85"/>
-      </g>
-      {/* Ureter */}
-      <g className={`hs ${s('ureter')?'on':''}`} onClick={()=>setSel('ureter')}>
-        <path d="M178 300 Q172 340 178 370 Q184 395 200 405" fill="none" stroke="url(#gUreter)" strokeWidth={s('ureter')?7:5} strokeLinecap="round"/>
-        {/* Peristalsis wave markers */}
-        <ellipse cx="176" cy="340" rx="4" ry="2" fill="#06b6d4" opacity=".5"/>
-        <ellipse cx="180" cy="370" rx="4" ry="2" fill="#06b6d4" opacity=".4"/>
-      </g>
-      {/* Hilum notch */}
-      <path d="M148 155 Q140 175 148 195" fill="none" stroke={dark?'#475569':'#94a3b8'} strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Labels with leader lines */}
-      <line x1="296" y1="60" x2="270" y2="75" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-      <text x="298" y="63" fill={dark?'#94a3b8':'#64748b'} fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('capsule')}>Capsule</text>
-      <line x1="310" y1="110" x2="275" y2="120" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-      <text x="312" y="113" fill={dark?'#5eead4':'#0d9488'} fontSize="9" fontWeight="600" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('cortex')}>Cortex</text>
-      <line x1="300" y1="165" x2="258" y2="170" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-      <text x="302" y="168" fill={dark?'#a78bfa':'#7c3aed'} fontSize="9" fontWeight="600" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('medulla')}>Medulla</text>
-      <line x1="230" y1="218" x2="210" y2="215" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-      <text x="232" y="221" fill="#d97706" fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('calyces')}>Calyces</text>
-      <text x="130" y="280" fill={dark?'#fdba74':'#ea580c'} fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('pelvis')}>Pelvis</text>
-      <line x1="130" y1="282" x2="160" y2="275" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-      <text x="210" y="385" fill="#06b6d4" fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('ureter')}>Ureter</text>
-      <line x1="208" y1="382" x2="192" y2="378" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
-    </svg>
-  );
-}
-
-function MicroNephron({sel,setSel,dark}){
-  const s=k=>sel===k;
-  const act=k=>s(k)?1:.65;
-  return(
-    <svg viewBox="0 0 340 460" className="w-full h-full" style={{maxWidth:'320px'}}>
-      <defs>
-        <radialGradient id="gGlom"><stop offset="0%" stopColor="#fca5a5"/><stop offset="100%" stopColor="#ef4444"/></radialGradient>
-        <linearGradient id="gPCT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#34d399"/><stop offset="100%" stopColor="#10b981"/></linearGradient>
-        <linearGradient id="gDesc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
-        <linearGradient id="gAsc" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#c4b5fd"/><stop offset="100%" stopColor="#8b5cf6"/></linearGradient>
-        <linearGradient id="gDCT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#fcd34d"/><stop offset="100%" stopColor="#f59e0b"/></linearGradient>
-        <linearGradient id="gCD" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#67e8f9"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
-        {/* Flow dot paths */}
-        <path id="pPCT" d="M100 112 Q100 135 122 135 Q152 135 152 158 Q152 178 122 178 Q88 178 88 198"/>
-        <path id="pDesc" d="M88 198 Q86 290 100 340 Q106 365 122 375"/>
-        <path id="pAsc" d="M122 375 Q142 368 152 338 Q168 280 168 215"/>
-        <path id="pDCT" d="M168 215 Q168 188 190 188 Q222 188 222 168 Q222 148 194 148 Q168 148 168 130"/>
-        <path id="pCD" d="M168 130 Q180 118 192 118 Q216 118 226 142 Q236 172 236 240 Q236 330 242 395"/>
-      </defs>
-      {/* Cortex / Medulla zone */}
-      <rect x="0" y="215" width="340" height="245" fill={dark?'rgba(109,40,217,.06)':'rgba(139,92,246,.04)'} rx="4"/>
-      <rect x="0" y="0" width="340" height="215" fill={dark?'rgba(13,148,136,.04)':'rgba(20,184,166,.03)'} rx="4"/>
-      <line x1="0" y1="215" x2="310" y2="215" stroke={dark?'#334155':'#cbd5e1'} strokeWidth="1" strokeDasharray="4,3"/>
-      <text x="6" y="208" fill={dark?'#5eead4':'#0d9488'} fontSize="8" fontFamily="Inter" fontWeight="600" opacity=".6">CORTEX</text>
-      <text x="6" y="228" fill={dark?'#a78bfa':'#7c3aed'} fontSize="8" fontFamily="Inter" fontWeight="600" opacity=".6">MEDULLA</text>
-      {/* Afferent arteriole - wider */}
-      <path d="M18 52 Q50 52 72 72" fill="none" stroke="#ef4444" strokeWidth="6" strokeLinecap="round"/>
-      <text x="4" y="46" fill="#ef4444" fontSize="9" fontWeight="600" fontFamily="Inter">Afferent (wide)</text>
-      {/* Efferent arteriole - narrower */}
-      <path d="M120 72 Q142 54 172 54" fill="none" stroke="#f87171" strokeWidth="3.5" strokeLinecap="round"/>
-      <text x="140" y="48" fill="#f87171" fontSize="9" fontWeight="600" fontFamily="Inter">Efferent (narrow)</text>
-      {/* Pressure arrows showing squeeze */}
-      <text x="54" y="44" fill={dark?'#fca5a5':'#dc2626'} fontSize="11" fontFamily="Inter">{'>>>'}</text>
-      {/* Bowman's capsule - double wall */}
-      <g className={`hs ${s('bowman')?'on':''}`} onClick={()=>setSel('bowman')} opacity={act('bowman')}>
-        <circle cx="96" cy="82" r="34" fill="none" stroke="#0ea5e9" strokeWidth={s('bowman')?3:1.2} opacity={s('bowman')?1:.6}/>
-        <circle cx="96" cy="82" r="30" fill="none" stroke="#0ea5e9" strokeWidth=".8" opacity=".3" strokeDasharray="3,2"/>
-        <text x="120" y="115" fill="#0ea5e9" fontSize="8" fontFamily="Inter" fontWeight="500">Bowman's</text>
-      </g>
-      {/* Glomerulus - capillary tuft with fenestrations */}
-      <g className={`hs ${s('glomerulus')?'on':''}`} onClick={()=>setSel('glomerulus')} opacity={act('glomerulus')}>
-        <circle cx="96" cy="82" r="18" fill="url(#gGlom)" stroke={s('glomerulus')?'#ef4444':'#f87171'} strokeWidth="2" className="pulse-glom"/>
-        {/* Fenestrated capillary loops inside */}
-        <path d="M86 74 Q82 82 88 88" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
-        <path d="M92 72 Q96 80 92 90" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
-        <path d="M100 73 Q104 82 100 90" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
-        <path d="M106 76 Q110 82 106 88" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
-        {/* Podocyte foot processes around edge */}
-        {[0,40,80,120,160,200,240,280,320].map((a,i)=>{
-          const r=(a*Math.PI)/180;
-          return <circle key={i} cx={96+Math.cos(r)*21} cy={82+Math.sin(r)*21} r="1.5" fill="#7dd3fc" opacity=".5"/>;
-        })}
-      </g>
-      {/* PCT with brush border texture */}
-      <g className={`hs ${s('pct')?'on':''}`} onClick={()=>setSel('pct')} opacity={act('pct')}>
-        <path d="M100 112 Q100 135 122 135 Q152 135 152 158 Q152 178 122 178 Q88 178 88 198" fill="none" stroke="url(#gPCT)" strokeWidth={s('pct')?7:5} strokeLinecap="round"/>
-        {/* Brush border microvilli ticks */}
-        {[[100,120,0],[110,132,-45],[130,135,-90],[148,142,-90],[152,158,0],[142,172,45],[122,178,90],[100,185,90]].map(([x,y,a],i)=>{
-          const r=(a*Math.PI)/180;
-          return <line key={i} x1={x} y1={y} x2={x+Math.cos(r)*5} y2={y+Math.sin(r)*5} stroke="#10b981" strokeWidth="1" opacity=".4"/>;
-        })}
-        {/* Reabsorption arrows */}
-        <text x="155" y="148" fill="#10b981" fontSize="8" opacity=".7">glucose</text>
-        <text x="155" y="158" fill="#10b981" fontSize="8" opacity=".7">AAs, H2O</text>
-        <path d="M154 150 L162 150" fill="none" stroke="#10b981" strokeWidth="1" opacity=".5" markerEnd="none"/>
-      </g>
-      {/* Descending Loop */}
-      <g className={`hs ${s('desc_loop')?'on':''}`} onClick={()=>setSel('desc_loop')} opacity={act('desc_loop')}>
-        <path d="M88 198 Q86 290 100 340 Q106 365 122 375" fill="none" stroke="url(#gDesc)" strokeWidth={s('desc_loop')?7:5} strokeLinecap="round"/>
-        {/* Water exit arrows */}
-        {[[82,240],[80,270],[84,300],[90,330]].map(([x,y],i)=>(
-          <g key={i} opacity=".5"><path d={`M${x} ${y} L${x-14} ${y}`} fill="none" stroke="#60a5fa" strokeWidth="1.2"/><text x={x-26} y={y+3} fill="#60a5fa" fontSize="7">H2O</text></g>
-        ))}
-      </g>
-      {/* Ascending Loop */}
-      <g className={`hs ${s('asc_loop')?'on':''}`} onClick={()=>setSel('asc_loop')} opacity={act('asc_loop')}>
-        <path d="M122 375 Q142 368 152 338 Q168 280 168 215" fill="none" stroke="url(#gAsc)" strokeWidth={s('asc_loop')?7:5} strokeLinecap="round"/>
-        {/* Salt pump arrows */}
-        {[[172,340],[175,310],[176,280],[174,250]].map(([x,y],i)=>(
-          <g key={i} opacity=".5"><path d={`M${x} ${y} L${x+14} ${y}`} fill="none" stroke="#8b5cf6" strokeWidth="1.2"/><text x={x+16} y={y+3} fill="#8b5cf6" fontSize="7">Na+</text></g>
-        ))}
-        <text x="175" y="368" fill={dark?'#c4b5fd':'#7c3aed'} fontSize="7" opacity=".7" fontWeight="600">WATERPROOF</text>
-      </g>
-      {/* U-turn label */}
-      <path d="M112 378 Q122 390 132 378" fill="none" stroke={dark?'#94a3b8':'#64748b'} strokeWidth="1" strokeLinecap="round"/>
-      <text x="108" y="402" fill={dark?'#94a3b8':'#64748b'} fontSize="7" fontFamily="Inter">U-turn</text>
-      {/* DCT */}
-      <g className={`hs ${s('dct')?'on':''}`} onClick={()=>setSel('dct')} opacity={act('dct')}>
-        <path d="M168 215 Q168 188 190 188 Q222 188 222 168 Q222 148 194 148 Q168 148 168 130" fill="none" stroke="url(#gDCT)" strokeWidth={s('dct')?7:5} strokeLinecap="round"/>
-        <text x="226" y="172" fill="#f59e0b" fontSize="7" opacity=".7">Aldosterone</text>
-        <text x="226" y="182" fill="#f59e0b" fontSize="7" opacity=".7">H+/HCO3-</text>
-      </g>
-      {/* Collecting Duct */}
-      <g className={`hs ${s('collecting')?'on':''}`} onClick={()=>setSel('collecting')} opacity={act('collecting')}>
-        <path d="M168 130 Q180 118 192 118 Q216 118 226 142 Q236 172 236 240 Q236 330 242 395" fill="none" stroke="url(#gCD)" strokeWidth={s('collecting')?7:5} strokeLinecap="round"/>
-        {/* Aquaporin channel markers */}
-        {[[238,180],[240,220],[240,260],[240,300],[241,340]].map(([x,y],i)=>(
-          <rect key={i} x={x} y={y-3} width="6" height="6" rx="1" fill="none" stroke="#06b6d4" strokeWidth=".8" opacity=".5"/>
-        ))}
-        <text x="250" y="265" fill="#06b6d4" fontSize="7" opacity=".7">ADH</text>
-        <text x="250" y="275" fill="#06b6d4" fontSize="7" opacity=".7">aquaporins</text>
-      </g>
-      {/* Vasa Recta */}
-      <g className={`hs ${s('vasa_recta')?'on':''}`} onClick={()=>setSel('vasa_recta')} opacity={act('vasa_recta')}>
-        <path d="M290 165 Q288 290 292 370 Q294 385 300 390 Q306 385 308 370 Q312 290 310 165" fill="none" stroke={s('vasa_recta')?'#e11d48':'#fda4af'} strokeWidth={s('vasa_recta')?4:2.5} strokeLinecap="round"/>
-        <path d="M290 165 Q288 290 292 370" fill="none" stroke="#ef4444" strokeWidth="1" opacity=".3" className="flow-line"/>
-        <path d="M300 390 Q306 385 308 370 Q312 290 310 165" fill="none" stroke="#3b82f6" strokeWidth="1" opacity=".3" className="flow-line" style={{animationDirection:'reverse'}}/>
-        <text x="280" y="158" fill={dark?'#fda4af':'#e11d48'} fontSize="8" fontFamily="Inter">Vasa</text>
-        <text x="280" y="168" fill={dark?'#fda4af':'#e11d48'} fontSize="8" fontFamily="Inter">Recta</text>
-      </g>
-      {/* Animated flow dots along nephron path */}
-      {[['pPCT','#10b981',3],['pDesc','#3b82f6',4],['pAsc','#8b5cf6',4],['pDCT','#f59e0b',3],['pCD','#06b6d4',5]].map(([path,color,dur])=>(
-        <circle key={path} r="3" fill={color} opacity=".8">
-          <animateMotion dur={dur+'s'} repeatCount="indefinite"><mpath href={'#'+path}/></animateMotion>
-        </circle>
-      ))}
-      {/* Labels */}
-      {[["Glomerulus",40,95,'#ef4444'],['PCT',68,155,'#10b981'],['Desc. Loop',18,265,'#3b82f6'],['Asc. Loop',155,295,'#8b5cf6'],['DCT',224,140,'#f59e0b'],['Collecting',248,230,'#06b6d4'],['Duct',260,240,'#06b6d4']].map(([lbl,x,y,fill])=>(
-        <text key={lbl+y} x={x} y={y} fill={fill} fontSize="9" fontWeight="600" fontFamily="Inter">{lbl}</text>
-      ))}
-      {/* Output arrow */}
-      <path d="M242 395 L242 410 L248 405 L242 410 L236 405" fill="none" stroke="#06b6d4" strokeWidth="1.5" strokeLinecap="round"/>
-      <text x="220" y="425" fill={dark?'#67e8f9':'#0891b2'} fontSize="8" fontFamily="Inter">to Renal Pelvis</text>
-    </svg>
-  );
-}
 
 // Pro anatomy SVG number-to-key mappings
-const KNUM={1:'pyramid',3:'artery',4:'vein',5:'hilum',6:'pelvis',7:'ureter',8:'calyces',9:'capsule',13:'cortex',15:'calyces',16:'papilla',17:'column'};
-const NNUM={1:'afferent',2:'bowman',3:'glomerulus',4:'efferent',5:'peritubular',6:'pct',7:'desc_loop',8:'asc_loop',9:'dct',10:'collecting',12:'vasa_recta'};
+const KNUM={1:'pyramid',2:'interlobular',3:'artery',4:'vein',5:'hilum',6:'pelvis',7:'ureter',8:'minor_calyx',9:'capsule',10:'inf_capsule',11:'sup_capsule',12:'interlobar',13:'nephron',14:'minor_calyx',15:'major_calyx',16:'papilla',17:'column'};
+const NNUM={1:'glomerulus',2:'efferent',3:'bowman',4:'pct',5:'cortical_collect',6:'dct',7:'loop_henle',8:'collecting',9:'peritubular',10:'arcuate_vein',11:'arcuate_art',12:'afferent',13:'jga'};
+const KVBOX="105 110 590 600";
+const NVBOX="20 185 610 520";
+const KPOSITIONS={1:{l:6.2,t:11.8},2:{l:5.8,t:20.9},3:{l:5.8,t:29.2},4:{l:5.8,t:38.0},5:{l:5.7,t:47.7},6:{l:5.8,t:55.6},7:{l:5.8,t:64.7},8:{l:5.8,t:74.1},9:{l:5.8,t:81.9},10:{l:4.1,t:91.1},11:{l:96.3,t:4.3},12:{l:96.1,t:13.4},13:{l:96.1,t:56.1},14:{l:96.1,t:64.7},15:{l:96.1,t:73.5},16:{l:96.1,t:82.5},17:{l:96.1,t:91.6}};
+const NPOSITIONS={1:{l:15.9,t:8.0},2:{l:28.8,t:8.0},3:{l:46.8,t:8.0},4:{l:77.4,t:8.0},5:{l:95.8,t:23.1},6:{l:95.8,t:44.4},7:{l:95.7,t:71.5},8:{l:95.8,t:85.9},9:{l:95.8,t:96.1},10:{l:15.8,t:95.2},11:{l:16.1,t:80.4},12:{l:15.6,t:55.7},13:{l:15.6,t:31.0}};
 const PRO_KIDNEY='https://upload.wikimedia.org/wikipedia/commons/a/ab/KidneyStructures_PioM.svg';
 const PRO_NEPHRON='https://upload.wikimedia.org/wikipedia/commons/5/52/Nephron_illustration.svg';
 
-function ProImage({src,alt,nums,sel,setSel,parts,dark}){
+function ProImage({svgUrl,alt,nums,positions,vbox,sel,setSel,parts,dark}){
+  const [svgContent,setSvgContent]=React.useState('');
+  const [loading,setLoading]=React.useState(true);
+  React.useEffect(()=>{
+    setLoading(true);setSvgContent('');
+    fetch(svgUrl)
+      .then(r=>r.text())
+      .then(txt=>{
+        let s=txt
+          .replace(/\s*width="[^"]*"/g,'')
+          .replace(/\s*height="[^"]*"/g,'')
+          .replace(/<style[\s\S]*?<\/style>/gi,'')
+          .replace(/<svg/,`<svg viewBox="${vbox}" style="width:100%;height:auto;display:block;"`);
+        setSvgContent(s);setLoading(false);
+      })
+      .catch(()=>setLoading(false));
+  },[svgUrl]);
   return(
-    <div className="w-full flex flex-col items-center gap-2">
-      <div className="rounded-xl overflow-hidden border" style={{background:'#fff',borderColor:dark?'#334155':'#e2e8f0',maxWidth:'380px',width:'100%'}}>
-        <img src={src} alt={alt} className="w-full" style={{minHeight:'200px'}} loading="lazy"
-          onError={e=>{e.target.style.display='none';e.target.nextSibling&&(e.target.nextSibling.style.display='block');}}/>
-        <p className="text-xs text-center py-8 text-slate-400" style={{display:'none'}}>Image unavailable — switch to Animated mode</p>
-      </div>
-      <div className="flex flex-wrap gap-1 justify-center">
-        {Object.entries(nums).map(([n,k])=>{
-          const p=parts[k];if(!p)return null;
-          return(<button key={n} onClick={()=>setSel(k)} title={p.lbl}
-            className="text-xs px-2 py-1 rounded-lg border tr font-semibold"
-            style={sel===k?{background:p.col,color:'#fff',borderColor:p.col}:{borderColor:dark?'#475569':'#d1d5db',color:dark?'#94a3b8':'#64748b'}}>
-            <span className="opacity-50 mr-0.5">{n}.</span>{p.lbl}
-          </button>);
-        })}
+    <div className="w-full flex flex-col items-center gap-3">
+      <div className="relative rounded-xl overflow-hidden border" style={{background:'#fff',borderColor:dark?'#334155':'#e2e8f0',maxWidth:'440px',width:'100%'}}>
+        {loading&&<div style={{height:'320px',display:'flex',alignItems:'center',justifyContent:'center'}}><span className="text-xs text-slate-400 animate-pulse">Loading anatomy diagram…</span></div>}
+        {!loading&&svgContent&&(
+          <div className="relative" style={{width:'100%'}}>
+            <div dangerouslySetInnerHTML={{__html:svgContent}}/>
+            {Object.entries(nums).map(([n,k])=>{
+              const p=parts[k],pos=positions[parseInt(n)];
+              if(!p||!pos)return null;
+              const active=sel===k;
+              return(
+                <button key={n} onClick={()=>setSel(k)} title={p.lbl}
+                  style={{position:'absolute',left:`${pos.l}%`,top:`${pos.t}%`,transform:'translate(-50%,-50%)',
+                    background:active?p.col:'rgba(15,23,42,0.82)',border:`2px solid ${active?p.col:'rgba(255,255,255,0.25)'}`,
+                    color:'#fff',borderRadius:'9999px',width:'22px',height:'22px',fontSize:'9px',fontWeight:'800',
+                    display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',lineHeight:1,
+                    boxShadow:active?`0 0 0 3px ${p.col}55,0 2px 6px rgba(0,0,0,.4)`:'0 1px 4px rgba(0,0,0,.5)',
+                    transition:'all 0.15s',zIndex:10}}>
+                  {n}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {!loading&&!svgContent&&<p className="text-xs text-center py-10 text-slate-400">Diagram unavailable</p>}
       </div>
       <p className={`text-xs text-center ${dark?'text-slate-600':'text-slate-400'}`}>
         Diagram: <a href="https://commons.wikimedia.org" target="_blank" rel="noopener" className="underline">Wikimedia Commons</a> · CC BY-SA 3.0
@@ -478,56 +312,39 @@ function ProImage({src,alt,nums,sel,setSel,parts,dark}){
 }
 
 function SystemMap({am,dark}){
-  const [view,setView]=useState('macro');
-  const [sel,setSel]=useState('cortex');
-  const [pro,setPro]=useState(false);
-  useEffect(()=>setSel(view==='macro'?'cortex':'glomerulus'),[view]);
+  const [view,setView]=React.useState('macro');
+  const [sel,setSel]=React.useState('pyramid');
+  React.useEffect(()=>setSel(view==='macro'?'pyramid':'glomerulus'),[view]);
   const parts=view==='macro'?MACRO:MICRO;
   const info=parts[sel]?.[am?'si':'ac']||{n:'',d:''};
   const col=parts[sel]?.col||'#0d9488';
-
   return(
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-center gap-3 flex-wrap">
-        <div className="flex gap-2">
-          {[['macro','Whole Kidney','#0d9488'],['micro','Nephron','#8b5cf6']].map(([v,lbl,c])=>(
-            <button key={v} onClick={()=>setView(v)}
-              className="px-4 py-2 text-xs font-semibold rounded-xl border tr"
-              style={view===v?{background:c,borderColor:c,color:'#fff'}:{borderColor:dark?'#334155':'#e2e8f0',color:dark?'#94a3b8':'#64748b'}}>
-              {lbl}
-            </button>
-          ))}
-        </div>
-        <button onClick={()=>setPro(!pro)}
-          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl border tr ${pro?'bg-amber-500/15 border-amber-500 text-amber-400':'border-slate-300 dark:border-slate-700 text-slate-500'}`}>
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          {pro?'Pro Anatomy ✓':'Pro Anatomy'}
-        </button>
+      <div className="flex items-center justify-center gap-2">
+        {[['macro','Whole Kidney','#0d9488'],['micro','Nephron','#8b5cf6']].map(([v,lbl,c])=>(
+          <button key={v} onClick={()=>setView(v)}
+            className="px-4 py-2 text-xs font-semibold rounded-xl border tr"
+            style={view===v?{background:c,borderColor:c,color:'#fff'}:{borderColor:dark?'#334155':'#e2e8f0',color:dark?'#94a3b8':'#64748b'}}>
+            {lbl}
+          </button>
+        ))}
       </div>
       <div className="flex flex-col lg:flex-row gap-4 items-start">
-        <div className="w-full lg:w-1/2 flex justify-center" style={{minHeight:'280px',maxHeight:pro?'none':'460px'}}>
-          {pro
-            ? (view==='macro'
-              ? <ProImage src={PRO_KIDNEY} alt="Kidney cross-section anatomy" nums={KNUM} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
-              : <ProImage src={PRO_NEPHRON} alt="Nephron anatomy" nums={NNUM} sel={sel} setSel={setSel} parts={parts} dark={dark}/>)
-            : (view==='macro'
-              ? <MacroKidney sel={sel} setSel={setSel} dark={dark}/>
-              : <MicroNephron sel={sel} setSel={setSel} dark={dark}/>)
+        <div className="w-full lg:w-1/2 flex justify-center">
+          {view==='macro'
+            ? <ProImage svgUrl={PRO_KIDNEY} alt="Kidney cross-section anatomy" nums={KNUM} positions={KPOSITIONS} vbox={KVBOX} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
+            : <ProImage svgUrl={PRO_NEPHRON} alt="Nephron anatomy" nums={NNUM} positions={NPOSITIONS} vbox={NVBOX} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
           }
         </div>
         <div className="w-full lg:w-1/2 flex flex-col gap-3">
           <div className="p-4 md:p-5 rounded-2xl border" style={{borderColor:col+'44',background:dark?'rgba(30,41,59,.7)':'rgba(241,245,249,.8)'}}>
-            <div className="flex items-center gap-2 mb-2"><div className="w-2.5 h-2.5 rounded-full" style={{background:col}}/><h2 className="text-base md:text-lg font-bold" style={{color:col}}>{info.n}</h2></div>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2.5 h-2.5 rounded-full" style={{background:col}}/>
+              <h2 className="text-base md:text-lg font-bold" style={{color:col}}>{info.n}</h2>
+            </div>
             <p className={`text-sm leading-6 ${dark?'text-slate-300':'text-slate-600'}`}>{info.d}</p>
           </div>
-          {!pro && <div className="flex flex-wrap gap-1.5">
-            {Object.entries(parts).map(([k,p])=>(
-              <button key={k} onClick={()=>setSel(k)} className="text-xs px-2.5 py-1.5 rounded-lg border tr"
-                style={sel===k?{background:p.col,color:'#fff',borderColor:p.col}:{borderColor:dark?'#334155':'#e2e8f0',color:dark?'#94a3b8':'#64748b'}}>
-                {p.lbl}
-              </button>
-            ))}
-          </div>}
+          <p className={`text-xs ${dark?'text-slate-600':'text-slate-400'}`}>Click numbered badges on the diagram to explore structures.</p>
         </div>
       </div>
     </div>
