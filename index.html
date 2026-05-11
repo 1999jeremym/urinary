@@ -253,59 +253,15 @@ const GFR=[
 // Pro anatomy SVG number-to-key mappings
 const KNUM={1:'pyramid',2:'interlobular',3:'artery',4:'vein',5:'hilum',6:'pelvis',7:'ureter',8:'minor_calyx',9:'capsule',10:'inf_capsule',11:'sup_capsule',12:'interlobar',13:'nephron',14:'minor_calyx',15:'major_calyx',16:'papilla',17:'column'};
 const NNUM={1:'glomerulus',2:'efferent',3:'bowman',4:'pct',5:'cortical_collect',6:'dct',7:'loop_henle',8:'collecting',9:'peritubular',10:'arcuate_vein',11:'arcuate_art',12:'afferent',13:'jga'};
-const KCROP={tw:2600,th:2640,x:105,y:110,w:590,h:600};
-const NCROP={tw:550.43,th:570.18,x:0,y:0,w:250,h:225};
-const KPOSITIONS={1:{l:6.2,t:11.8},2:{l:5.8,t:20.9},3:{l:5.8,t:29.2},4:{l:5.8,t:38.0},5:{l:5.7,t:47.7},6:{l:5.8,t:55.6},7:{l:5.8,t:64.7},8:{l:5.8,t:74.1},9:{l:5.8,t:81.9},10:{l:4.1,t:91.1},11:{l:96.3,t:4.3},12:{l:96.1,t:13.4},13:{l:96.1,t:56.1},14:{l:96.1,t:64.7},15:{l:96.1,t:73.5},16:{l:96.1,t:82.5},17:{l:96.1,t:91.6}};
-const NPOSITIONS={1:{l:6.6,t:4.3},2:{l:19.2,t:4.3},3:{l:36.8,t:4.3},4:{l:66.7,t:4.3},5:{l:84.6,t:18.3},6:{l:84.6,t:38.0},7:{l:84.6,t:63.2},8:{l:84.6,t:76.4},9:{l:84.6,t:85.8},10:{l:6.5,t:84.9},11:{l:6.6,t:71.3},12:{l:6.4,t:48.4},13:{l:6.4,t:25.6}};
 const PRO_KIDNEY='https://upload.wikimedia.org/wikipedia/commons/a/ab/KidneyStructures_PioM.svg';
 const PRO_NEPHRON='https://upload.wikimedia.org/wikipedia/commons/5/52/Nephron_illustration.svg';
-
-function ProImage({svgUrl,alt,nums,positions,crop,sel,setSel,parts,dark}){
-  // crop = {tw, th, x, y, w, h}
-  // tw/th = total SVG canvas size; x/y = viewBox origin; w/h = viewBox size
-  // CSS pans/zooms the <img> to show exactly the viewBox region — no fetch needed
-  const {tw,th,x:vx,y:vy,w:vw,h:vh}=crop;
-  const pb=(vh/vw*100).toFixed(3)+'%';         // container aspect ratio
-  const iw=(tw/vw*100).toFixed(3)+'%';         // img width as % of container
-  const il=(-vx/vw*100).toFixed(3)+'%';        // img left offset
-  const it=(-vy/vh*100).toFixed(3)+'%';        // img top offset (% of container height)
-  return(
-    <div className="w-full flex flex-col items-center gap-3">
-      <div className="rounded-xl overflow-hidden border" style={{maxWidth:'440px',width:'100%',borderColor:dark?'#334155':'#e2e8f0',background:'#fff'}}>
-        <div className="relative" style={{width:'100%',paddingBottom:pb,overflow:'hidden'}}>
-          <img src={svgUrl} alt={alt} loading="lazy"
-            style={{position:'absolute',width:iw,height:'auto',left:il,top:it,display:'block'}}
-            onError={e=>{e.target.style.opacity='0.3';}}/>
-          {Object.entries(nums).map(([n,k])=>{
-            const p=parts[k],pos=positions[parseInt(n)];
-            if(!p||!pos)return null;
-            const active=sel===k;
-            return(
-              <button key={n} onClick={()=>setSel(k)} title={p.lbl}
-                style={{position:'absolute',left:`${pos.l}%`,top:`${pos.t}%`,transform:'translate(-50%,-50%)',
-                  background:active?p.col:'rgba(15,23,42,0.82)',border:`2px solid ${active?p.col:'rgba(255,255,255,0.25)'}`,
-                  color:'#fff',borderRadius:'9999px',width:'22px',height:'22px',fontSize:'9px',fontWeight:'800',
-                  display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',lineHeight:1,
-                  boxShadow:active?`0 0 0 3px ${p.col}55,0 2px 6px rgba(0,0,0,.4)`:'0 1px 4px rgba(0,0,0,.5)',
-                  transition:'all 0.15s',zIndex:10}}>
-                {n}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-      <p className={`text-xs text-center ${dark?'text-slate-600':'text-slate-400'}`}>
-        Diagram: <a href="https://commons.wikimedia.org" target="_blank" rel="noopener" className="underline">Wikimedia Commons</a> · CC BY-SA 3.0
-      </p>
-    </div>
-  );
-}
 
 function SystemMap({am,dark}){
   const [view,setView]=React.useState('macro');
   const [sel,setSel]=React.useState('pyramid');
   React.useEffect(()=>setSel(view==='macro'?'pyramid':'glomerulus'),[view]);
   const parts=view==='macro'?MACRO:MICRO;
+  const nums=view==='macro'?KNUM:NNUM;
   const info=parts[sel]?.[am?'si':'ac']||{n:'',d:''};
   const col=parts[sel]?.col||'#0d9488';
   return(
@@ -320,21 +276,36 @@ function SystemMap({am,dark}){
         ))}
       </div>
       <div className="flex flex-col lg:flex-row gap-4 items-start">
-        <div className="w-full lg:w-1/2 flex justify-center">
-          {view==='macro'
-            ? <ProImage svgUrl={PRO_KIDNEY} alt="Kidney cross-section anatomy" nums={KNUM} positions={KPOSITIONS} crop={KCROP} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
-            : <ProImage svgUrl={PRO_NEPHRON} alt="Nephron anatomy" nums={NNUM} positions={NPOSITIONS} crop={NCROP} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
-          }
+        <div className="w-full lg:w-1/2 flex flex-col items-center gap-2">
+          <div className="rounded-xl overflow-hidden border w-full" style={{background:'#fff',borderColor:dark?'#334155':'#e2e8f0'}}>
+            <img src={view==='macro'?PRO_KIDNEY:PRO_NEPHRON} alt={view==='macro'?'Kidney cross-section':'Nephron diagram'}
+              style={{width:'100%',display:'block'}} loading="lazy"
+              onError={e=>{e.target.style.opacity='0.15';}}/>
+          </div>
+          <p className={`text-xs text-center ${dark?'text-slate-600':'text-slate-400'}`}>
+            <a href="https://commons.wikimedia.org" target="_blank" rel="noopener" className="underline">Wikimedia Commons</a> · CC BY-SA 3.0
+          </p>
         </div>
         <div className="w-full lg:w-1/2 flex flex-col gap-3">
-          <div className="p-4 md:p-5 rounded-2xl border" style={{borderColor:col+'44',background:dark?'rgba(30,41,59,.7)':'rgba(241,245,249,.8)'}}>
+          <div className="p-4 rounded-2xl border" style={{borderColor:col+'44',background:dark?'rgba(30,41,59,.7)':'rgba(241,245,249,.8)'}}>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2.5 h-2.5 rounded-full" style={{background:col}}/>
-              <h2 className="text-base md:text-lg font-bold" style={{color:col}}>{info.n}</h2>
+              <h2 className="text-base font-bold" style={{color:col}}>{info.n}</h2>
             </div>
             <p className={`text-sm leading-6 ${dark?'text-slate-300':'text-slate-600'}`}>{info.d}</p>
           </div>
-          <p className={`text-xs ${dark?'text-slate-600':'text-slate-400'}`}>Click numbered badges on the diagram to explore structures.</p>
+          <div className="flex flex-wrap gap-1.5">
+            {Object.entries(nums).map(([n,k])=>{
+              const p=parts[k];if(!p)return null;
+              return(
+                <button key={n} onClick={()=>setSel(k)}
+                  className="text-xs px-2 py-1 rounded-lg border tr font-semibold"
+                  style={sel===k?{background:p.col,color:'#fff',borderColor:p.col}:{borderColor:dark?'#475569':'#d1d5db',color:dark?'#94a3b8':'#64748b'}}>
+                  <span style={{opacity:.5,marginRight:'2px'}}>{n}.</span>{p.lbl}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
