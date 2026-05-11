@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urinary System Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['"Plus Jakarta Sans"','sans-serif']}}}}</script>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding:0;transition:background .3s}
+.gd{background:rgba(15,23,42,.8);backdrop-filter:blur(20px);border:1px solid rgba(51,65,85,.5)}
+.gl{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(203,213,225,.8)}
+.tr{transition:all .2s ease}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:9px}
+.hs{cursor:pointer;transition:all .2s}.hs:hover{filter:brightness(1.25) drop-shadow(0 0 6px rgba(13,148,136,.5))}
+.hs.on{filter:drop-shadow(0 0 10px rgba(139,92,246,.7))}
+.badge{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:600}
+@keyframes primerIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes flowDash{to{stroke-dashoffset:-24}}
+@keyframes pulseGlom{0%,100%{r:17}50%{r:19}}
+@keyframes floatDot{0%{offset-distance:0%}100%{offset-distance:100%}}
+.flow-line{stroke-dasharray:6,6;animation:flowDash 1s linear infinite}
+.pulse-glom{animation:pulseGlom 1.5s ease-in-out infinite}
+@keyframes aBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes aSqueeze{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.7)}}
+@keyframes aFill{0%{height:0}80%{height:40px}100%{height:40px}}
+@keyframes aDoor{0%,40%{transform:translateY(0)}50%,90%{transform:translateY(6px)}100%{transform:translateY(0)}}
+@keyframes aGrab{0%{transform:translateX(16px);opacity:1}100%{transform:translateX(0);opacity:0}}
+@keyframes aDrip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(18px);opacity:0}}
+@keyframes aPump{0%{transform:translateX(0);opacity:1}100%{transform:translateX(18px);opacity:0}}
+@keyframes aSpin{to{transform:rotate(360deg)}}
+@keyframes aSeesaw{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes aStrip{0%{width:0}100%{width:100%}}
+.primer-card{animation:primerIn .4s ease-out}
+.primer-step{border-left:2px solid rgba(13,148,136,.4);padding-left:12px;margin-bottom:10px}
+.primer-step:last-child{margin-bottom:0}
+@media(max-width:767px){
+  .desktop-tabs{display:none!important}
+  .mobile-bnav{display:flex!important}
+  .main-wrap{padding-bottom:68px}
+}
+@media(min-width:768px){
+  .mobile-bnav{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef}=React;
+const Ic={
+  Map:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>,
+  Dir:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>,
+  Flow:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>,
+  Lab:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>,
+  Draw:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>,
+  Sun:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>,
+  Moon:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>,
+  Folder:()=><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>,
+  File:()=><svg className="w-3.5 h-3.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
+  Trash:()=><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>,
+  Caret:({o})=><svg className={`w-3 h-3 tr ${o?'rotate-90':''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>,
+};
+
+// PRIMER
+function Primer({dark,onDismiss}){
+  const steps=[
+    {icon:'🏭',title:'The Big Idea',text:'This app teaches the urinary system using a factory analogy. Your kidneys are twin water treatment plants — they take in dirty blood, filter it, reclaim the good stuff, and flush the waste. Every label in "Simple" mode uses this analogy.'},
+    {icon:'🔀',title:'Jargon Toggle',text:'The switch in the header flips the ENTIRE app between "Simple" (13-year-old friendly analogies) and "Academic" (proper clinical terminology). Use Simple to understand concepts, Academic to learn the real names.'},
+    {icon:'🗺️',title:'System Map',text:'Interactive clickable diagrams of the whole kidney and the nephron (the microscopic filtering unit). Tap any structure to learn what it does.'},
+    {icon:'📂',title:'Deep Directory',text:'A file-tree style knowledge base. Every organ, function, hormone, and clinical condition — expandable and searchable. Click any leaf to read the full explanation.'},
+    {icon:'⚡',title:'Process Flow',text:'Animated flowcharts showing how things actually happen step-by-step: normal filtration, dehydration response, blood pressure rescue (RAAS), acid-base correction, and EPO. Pick a scenario and watch the cascade.'},
+    {icon:'🧪',title:'Clinical Lab',text:'Urine analysis table, GFR staging for kidney disease, and a UTI breakdown comparing male vs female anatomy. The stuff that shows up on exams.'},
+    {icon:'✏️',title:'Canvas',text:'A drawing pad with challenges. Draw processes from memory to prove you actually understand the "why" behind the "what." Best way to study.'},
+  ];
+  return(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:'rgba(0,0,0,.6)',backdropFilter:'blur(6px)'}}>
+      <div className={`primer-card w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl p-6 ${dark?'bg-slate-900 border border-slate-700':'bg-white border border-slate-200'}`}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-3 w-3 rounded-full bg-teal-500" style={{boxShadow:'0 0 12px rgba(13,148,136,.8)'}}/>
+          <h2 className="text-lg font-display font-bold text-teal-400">Welcome to the Urinary System Hub</h2>
+        </div>
+        <p className={`text-sm mb-5 leading-6 ${dark?'text-slate-400':'text-slate-500'}`}>
+          Think of your kidneys as a city's water treatment plant. Blood flows in dirty, gets filtered through a million tiny processing units (nephrons), and leaves clean — with waste flushed out as urine. Here's what each section of this app covers:
+        </p>
+        <div className="flex flex-col gap-1">
+          {steps.map((s,i)=>(
+            <div key={i} className="primer-step">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-base">{s.icon}</span>
+                <span className={`text-xs font-bold ${dark?'text-slate-200':'text-slate-700'}`}>{s.title}</span>
+              </div>
+              <p className={`text-xs leading-5 ${dark?'text-slate-400':'text-slate-500'}`}>{s.text}</p>
+            </div>
+          ))}
+        </div>
+        <button onClick={onDismiss}
+          className="mt-5 w-full py-2.5 rounded-xl text-sm font-semibold bg-teal-500 text-white hover:bg-teal-600 tr">
+          Got it, let's go
+        </button>
+        <p className={`text-center text-xs mt-2 ${dark?'text-slate-600':'text-slate-400'}`}>You can reopen this from the header anytime</p>
+      </div>
+    </div>
+  );
+}
+
+const MACRO={
+  cortex:{lbl:'Cortex',col:'#0d9488',ac:{n:'Renal Cortex',d:'Outer layer of the kidney. Contains glomeruli, PCT and DCT. Where filtration and most reabsorption begins. Each kidney has ~1 million nephrons.'},si:{n:'The Outer Ring',d:'The outer factory floor. All 1 million tiny filtering nets live here. This is where blood first gets squeezed through the filter.'}},
+  medulla:{lbl:'Medulla',col:'#7c3aed',ac:{n:'Renal Medulla / Pyramids',d:'Inner region of 8-18 renal pyramids. Contains Loops of Henle and collecting ducts. Maintains the hyperosmotic gradient needed to concentrate urine. Gets saltier the deeper you go.'},si:{n:'The Deep Engine Room',d:'The salty core. Salt pumps (loops of Henle) work hard down here making the environment super salty - which automatically sucks water out of passing filtrate.'}},
+  calyces:{lbl:'Calyces',col:'#f59e0b',ac:{n:'Minor and Major Calyces',d:'Cup-shaped chambers. 8-18 minor calyces collect urine draining from each renal papilla. Minor calyces merge into 2-3 major calyces, which pour into the renal pelvis.'},si:{n:'The Funnel Network',d:'Tiny cups catch drips from each pyramid tip. Small cups pour into bigger cups, all funnelling toward the main exit drain.'}},
+  pelvis:{lbl:'Pelvis',col:'#f97316',ac:{n:'Renal Pelvis',d:'Large funnel-shaped chamber collecting urine from all major calyces. Narrows into the ureter. Last stop inside the kidney.'},si:{n:'The Central Tank',d:'The main collection basin. All processed waste pools here before being pumped out through the export pipe (ureter).'}},
+  ureter:{lbl:'Ureter',col:'#06b6d4',ac:{n:'Ureter',d:'Two muscular tubes (~25 cm) carrying urine from each kidney to the bladder by peristalsis (wave-like muscle contractions). Enter bladder at an oblique angle - acts as one-way valve preventing backflow.'},si:{n:'Export Pipe',d:'Muscular tube that squeezes urine downward like toothpaste. Enters the bladder at an angle so when bladder pressure rises it pinches shut - built-in anti-backflow valve.'}},
+  capsule:{lbl:'Capsule',col:'#64748b',ac:{n:'Renal Capsule',d:'Tough fibrous membrane encasing the kidney. Protects against trauma and infection. The shiny white outer layer you see when dissecting a kidney.'},si:{n:'The Protective Shell',d:"The kidney's tough outer skin - like a plastic case keeping the delicate factory machinery inside safe from bumps and bacteria."}},
+  pyramid:{lbl:'Pyramid',col:'#dc2626',ac:{n:'Renal Pyramid',d:'Triangular striated structures in the medulla. 8-18 per kidney. Contain loops of Henle and collecting ducts arranged in parallel. Striations are tubules running toward the papilla tip. The countercurrent gradient runs along their length — saltiest at the tip.'},si:{n:'Salt Gradient Towers',d:'Triangular wedge-shaped structures packed with parallel loops and ducts running toward the tip. The deeper you go, the saltier it gets — this salt gradient is what pulls water out of filtrate. Like stacking salt layers in a tower.'}},
+  artery:{lbl:'R. Artery',col:'#ef4444',ac:{n:'Renal Artery',d:'Branch of abdominal aorta delivering ~20-25% of cardiac output (~1.2 L/min) to each kidney. Enters at hilum, branches: segmental → interlobar → arcuate → cortical radiate → afferent arterioles feeding each glomerulus.'},si:{n:'Main Blood Pipe In',d:"Huge artery delivering ~20% of all your heart pumps — straight into the kidney. Branches like a tree: big trunk → medium branches → tiny twigs → each twig feeds one glomerulus. That's a LOT of blood for two small organs."}},
+  vein:{lbl:'R. Vein',col:'#3b82f6',ac:{n:'Renal Vein',d:'Carries filtered blood from kidney back to inferior vena cava. Follows reverse branching: cortical radiate veins → arcuate → interlobar → renal vein. Left renal vein is longer, passes between aorta and superior mesenteric artery (Nutcracker syndrome).'},si:{n:'Clean Blood Pipe Out',d:'Takes the cleaned blood back to the main highway (inferior vena cava). Mirrors the artery branching in reverse. The left one is longer and can get squeezed between two other vessels — called Nutcracker syndrome.'}},
+  hilum:{lbl:'Hilum',col:'#78716c',ac:{n:'Renal Hilum',d:"Medial indentation where renal artery, renal vein, ureter, lymphatics, and nerves enter/exit the kidney. The kidney's gateway. Protected within renal sinus filled with fat tissue."},si:{n:'The Loading Dock',d:'The one entry/exit point on the kidney. Blood in (artery), blood out (vein), urine out (ureter), plus nerves and lymph vessels all pass through this notch. Surrounded by protective fat padding.'}},
+  papilla:{lbl:'Papilla',col:'#fb923c',ac:{n:'Renal Papilla',d:'The tip (apex) of each renal pyramid projecting into a minor calyx. Contains openings of collecting ducts (area cribrosa) where final urine drips into the calyx. Damaged in papillary necrosis (diabetes, sickle cell, NSAIDs).'},si:{n:'The Drip Tip',d:'The pointy end of each pyramid poking into a tiny cup (minor calyx). Tiny holes here let finished urine drip out of the collecting ducts. Damage from diabetes or painkillers blocks urine drainage.'}},
+  column:{lbl:'Column',col:'#a3a3a3',ac:{n:'Renal Column (of Bertin)',d:'Extensions of cortical tissue dipping between adjacent pyramids. Contain interlobar blood vessels and connective tissue. Separate and support individual pyramids structurally.'},si:{n:'The Dividing Walls',d:'Cortex tissue that reaches down between pyramids like walls between slices of pie. Blood vessels run through these walls to supply different kidney sections. They keep pyramids separated and supported.'}},
+};
+
+const MICRO={
+  bowman:{lbl:"Bowman's",col:'#0ea5e9',ac:{n:"Bowman's Capsule",d:"Cup-shaped double-walled structure surrounding the glomerulus. Collects filtrate squeezed from glomerular capillaries. Together with glomerulus = renal corpuscle. Filtrate passes from here into the PCT."},si:{n:'The Catching Cup',d:"A tiny cup wrapping around the pressure mesh. Whatever gets blasted through the filter drips into this cup - it's the very start of the nephron pipeline."}},
+  glomerulus:{lbl:'Glomerulus',col:'#ef4444',ac:{n:'Glomerulus',d:'Ball of fenestrated (leaky) capillaries under high pressure. Afferent arteriole (wider) feeds in, efferent (narrower) drains out - pressure difference forces filtrate through. Podocytes with filtration slits = last barrier. GFR = 125 mL/min = 180 L/day. Proteins and blood cells are too large - they stay in blood.'},si:{n:'The Pressure Mesh',d:"Like putting your thumb over a garden hose. Blood enters through a wide pipe and exits through a narrower one - pressure blasts water, salts, glucose and waste through leaky walls. Proteins and red blood cells are too big - they stay. Your entire blood supply is filtered every 40 minutes!"}},
+  pct:{lbl:'PCT',col:'#10b981',ac:{n:'Proximal Convoluted Tubule (PCT)',d:"First tubule after Bowman's capsule. Reabsorbs: ALL glucose (if blood glucose too high, transporters get overwhelmed = glycosuria), ALL amino acids, ALL vitamins, most electrolytes, 60-70% of water (osmosis). Dense microvilli maximise surface area. Also converts vitamin D to calcitriol. Not under hormonal control."},si:{n:'The Greedy Reclaimer',d:'The first and hungriest section. Sucks back 100% of sugar (diabetes overwhelms these transporters = sugar in urine), all protein building blocks, all vitamins, most salts, and 60-70% of water. No hormones needed - always does maximum effort.'}},
+  desc_loop:{lbl:'Desc. Loop',col:'#3b82f6',ac:{n:'Descending Loop of Henle',d:'Dips into medulla. Permeable to WATER, not solutes. Water exits by osmosis into the hyperosmotic medullary environment. ~20% more water reabsorbed here. By bottom of loop ~90% of filtered water is recovered total.'},si:{n:'The Water Slide',d:'The pipe dives into the salty core. Walls are leaky to water only - water drains out passively by osmosis. By the U-turn at the bottom, 90% of water is back in the blood. Filtrate is now thick and concentrated.'}},
+  asc_loop:{lbl:'Asc. Loop',col:'#8b5cf6',ac:{n:'Ascending Loop of Henle',d:'Returns to cortex. IMPERMEABLE to water. Actively pumps Na+, K+, Cl- out into the medullary interstitium - creates the hyperosmotic gradient that drives water out of the descending loop. This is the countercurrent multiplier. Target of loop diuretics (furosemide).'},si:{n:'The Salt Pumper',d:'The return pipe is waterproof. Instead of water, it pumps salts (Na+, K+, Cl-) out into surrounding tissue making the medulla super salty. That saltiness is what pulled water out of the descending limb. The two loops work as a team - the countercurrent multiplier.'}},
+  dct:{lbl:'DCT',col:'#f59e0b',ac:{n:'Distal Convoluted Tubule (DCT)',d:'Hormone-controlled fine-tuning zone. Aldosterone: reabsorbs Na+ (water follows, raises BP). Acid/base balance: acidosis - secretes H+ into DCT, reabsorbs HCO3-. Alkalosis - secretes HCO3-, reabsorbs H+. Also secretes ammonia, drugs, toxins.'},si:{n:'The Smart Adjuster',d:'Unlike the PCT (always the same), the DCT takes hormone orders. Aldosterone: grab more salt, water follows, BP rises. Too acidic? Eject H+ ions. Too basic? Eject bicarbonate. Got toxins? Secret them out here.'}},
+  collecting:{lbl:'Collecting Duct',col:'#06b6d4',ac:{n:'Collecting Duct',d:'ADH (from posterior pituitary) makes walls permeable via aquaporins - water reabsorbed - concentrated dark urine. No ADH = dilute pale urine. Drains into papilla then minor calyx. 180 L filtered per day - only 1.5-2 L exits as urine.'},si:{n:'The Final Volume Boss',d:'Dehydrated? Brain sends ADH hormone which opens secret water channels (aquaporins) in the duct wall - water floods back into blood, pee becomes tiny and dark. Well hydrated? No ADH, water stays in tube, pee is pale. 180 litres filtered, ~1.5 litres actually leave your body!'}},
+  vasa_recta:{lbl:'Vasa Recta',col:'#e11d48',ac:{n:'Vasa Recta',d:'Hairpin capillary loops running parallel to the Loop of Henle. Exchange solutes and water passively (countercurrent exchange) without washing away the medullary gradient. Deliver nutrients and O2 to medullary tissue.'},si:{n:'The Coolant Loops',d:'Blood vessel loops running alongside the salt pumps. They carry away reabsorbed fluid without destroying the salty gradient the loop of Henle worked so hard to build. Like a balanced heat exchanger.'}},
+  afferent:{lbl:'Afferent Art.',col:'#ef4444',ac:{n:'Afferent Arteriole',d:'Wider arteriole feeding blood INTO the glomerulus from cortical radiate artery. Its wider diameter creates high hydrostatic pressure in glomerulus, driving filtration. Contains JG cells (renin-secreting) and can constrict/dilate to autoregulate GFR.'},si:{n:'The Wide Pipe In',d:"The wider input pipe to the pressure mesh. Because it's wider than the output pipe (efferent), pressure builds up inside the glomerulus — like putting your thumb partially over a hose. Contains the pressure-sensing JG cells that start the RAAS alarm when BP drops."}},
+  efferent:{lbl:'Efferent Art.',col:'#f87171',ac:{n:'Efferent Arteriole',d:'Narrower arteriole draining blood FROM the glomerulus. Its smaller diameter maintains high glomerular pressure. Gives rise to peritubular capillaries (cortex) or vasa recta (juxtamedullary nephrons). ACE inhibitors dilate efferent arteriole, reducing glomerular pressure — protects kidneys in CKD.'},si:{n:'The Narrow Pipe Out',d:"The narrower exit pipe from the pressure mesh. Because it's narrower than the input, it acts like a dam — keeping pressure high inside so filtration keeps happening. Then branches into a second capillary network that picks up reabsorbed stuff."}},
+  peritubular:{lbl:'Peritubular Cap.',col:'#fb923c',ac:{n:'Peritubular Capillaries',d:'Low-pressure capillary network surrounding PCT and DCT in cortex. Arises from efferent arteriole. Absorbs reabsorbed substances (water, glucose, ions) from tubular cells back into blood. Low hydrostatic + high oncotic pressure favors reabsorption.'},si:{n:'The Reclaim Network',d:'A web of tiny blood vessels wrapping around the tubules. After blood leaves the glomerulus through the narrow pipe, it enters these low-pressure capillaries. Their job: pick up everything the tubules reabsorb (water, sugar, salts) and return it to the bloodstream.'}},
+};
+
+const DIR={
+  "Organs":{
+    "Kidneys":{ac:{n:'Kidneys',d:'Two bean-shaped organs (~11 cm), retroperitoneal (behind peritoneum). Left sits slightly higher. Receive 20-25% of cardiac output (~1.2 L/min). Each has ~1 million nephrons. Produce 1.5-2 L urine per day from 180 L filtered plasma.'},si:{n:'The Twin Filtration Plants',d:'Two bean-shaped factories behind your stomach. Each contains ~1 million microscopic filters. Every 40 minutes they clean your entire blood supply - like filtering an Olympic swimming pool every single day.'}},
+    "Ureters":{ac:{n:'Ureters',d:'Two fibromuscular tubes (~25 cm). Transport urine from renal pelvis to bladder via peristalsis. Enter bladder obliquely - acts as valve preventing vesicoureteral reflux (backflow of urine into kidneys).'},si:{n:'Export Pipes',d:'Squeeze urine downward with wave-like muscle contractions like squeezing toothpaste. Enter the bladder at an angle so filling pressure pinches them shut - built-in anti-backflow system.'}},
+    "Urinary Bladder":{ac:{n:'Urinary Bladder',d:'Smooth collapsible muscular sac. Capacity ~500 mL. Located on pelvic floor behind pubic symphysis. Males: anterior to rectum, prostate surrounds bladder neck. Females: anterior to vagina and uterus. Trigone (triangle at base between 2 ureteral openings and urethral exit) = infection-prone zone - bacteria persist here (cystitis, thrush).'},si:{n:'The Holding Tank',d:"A muscular balloon storing up to 500 mL. In men the prostate wraps around the drain at the bottom - enlarged prostate means can't pee. The trigone triangle at the base is where UTI bacteria love to hide - hard to flush out."}},
+    "Urethra":{ac:{n:'Urethra',d:'Tube from bladder to outside. Male ~20 cm, female ~4 cm. Two sphincters: Internal (smooth muscle, involuntary - ANS-controlled) and External (skeletal muscle, voluntary - conscious control). Female short urethra + proximity to anus = much higher UTI risk.'},si:{n:'The Exit Pipe',d:"The final drain. Women have a 4 cm pipe, men have 20 cm - main reason women get way more UTIs. Two doors guard the exit: auto inner door (can't control it, ANS runs it) and manual outer door (you control this - toilet training is learning to control skeletal muscle)."}},
+  },
+  "Kidney Functions":{
+    "Excretory":{ac:{n:'Excretory Function',d:'Filters 180 L plasma per day. Excretes: urea (protein metabolism), uric acid (nucleic acid metabolism), creatinine (muscle creatine metabolism), excess water, ions, drugs, toxins. Only 1-2 L exits as urine. Kidneys reclaim more than 99% of filtered substances.'},si:{n:'The Garbage Collector',d:'Every day 180 litres of blood plasma gets screened. Waste products (urea from broken-down protein, uric acid from DNA metabolism, creatinine from muscles) get removed. The genius: 99% of the good stuff is saved. Only ~1.5 L of actual waste leaves as pee.'}},
+    "Regulatory":{ac:{n:'Regulatory Function',d:'Regulates: (1) Plasma fluid volume and osmolarity, (2) Electrolyte concentrations (Na+, K+, Ca2+, Cl-, HCO3-), (3) Blood pH via H+ and HCO3- - only organ that can fully correct acid/base, (4) Blood pressure via RAAS and urine output, (5) RBC count via EPO.'},si:{n:'The Body Control Panel',d:"The kidneys are the body's master thermostat. They control: how much water is in your blood, what salts it contains, whether blood is too acidic or basic, your blood pressure, and even how many red blood cells you make."}},
+    "Vitamin D Activation":{ac:{n:'Metabolic: Vitamin D to Calcitriol',d:'Skin makes inactive vitamin D (cholecalciferol) from sunlight. Liver converts to calcidiol. Kidney PCT cells convert calcidiol to CALCITRIOL (active hormone). Calcitriol: increases Ca2+ and phosphate gut absorption, reduces cancer risk, protects cardiovascular health, reduces dementia risk, boosts immunity, reduces inflammation, regulates blood glucose.'},si:{n:'The Vitamin D Factory',d:"Vitamin D from sunlight is like a flat-pack table - not assembled yet. Liver does some work, then kidneys do the final step to make it actually work (calcitriol). Active vitamin D: absorbs calcium for bones, fights cancer, protects heart and brain, boosts immune system. Without working kidneys, vitamin D can't be activated."}},
+    "EPO and RBC Control":{ac:{n:'Metabolic: Erythropoietin (EPO)',d:'EPOS cells in kidney cortex detect low blood O2 (hypoxia). Release EPO (erythropoietin). EPO travels to red bone marrow - stimulates erythrocyte production - more RBCs - more O2 transport - negative feedback reduces EPO. Basis of EPO doping in sport. Therapeutically used in CKD anaemia.'},si:{n:'The Red Blood Cell Boss',d:'If oxygen drops (altitude, anaemia), kidney EPOS cells release EPO hormone. EPO tells bone marrow: make more red blood cells urgently! More RBCs = more oxygen = problem solved = alarm switches off. Tour de France cyclists used to illegally inject this to boost RBC count and endurance.'}},
+  },
+  "The Nephron":{
+    "Renal Corpuscle":{
+      "Glomerulus":{ac:{n:'Glomerulus',d:'Fenestrated capillary tuft under high hydrostatic pressure (afferent arteriole wider than efferent). Podocytes with filtration slits are the final barrier. GFR = 125 mL/min = 180 L/day. Filters everything except large proteins and blood cells.'},si:{n:'The Pressure Filter',d:'Blood in through a wide pipe, out through a narrower pipe - pressure skyrockets and forces everything small through the leaky capillary walls. Proteins and red blood cells are too large. A coffee mug of plasma is cleaned every single minute.'}},
+      "Podocytes":{ac:{n:'Podocytes',d:'Specialised epithelial cells with finger-like pedicles wrapping glomerular capillaries. Gaps between pedicles = filtration slits. Final barrier against protein leakage. Podocyte damage leads to proteinuria.'},si:{n:'The Grabby Tentacles',d:'Cells with finger-like arms gripping the outside of the capillary. Tiny gaps between fingers = last filter. Damage these and protein leaks into urine (proteinuria) - a red flag for kidney disease.'}},
+      "Bowmans Capsule":{ac:{n:"Bowman's Capsule",d:"Double-walled cup surrounding glomerulus. Inner layer = podocytes. Urinary space between layers collects filtrate. Filtrate flows into PCT. Glomerulus + Bowman's capsule = renal corpuscle."},si:{n:"Bowman's Capsule",d:'The cup surrounding the pressure filter. Whatever gets blasted through the mesh drips into this cup. From here, filtrate begins its journey down the nephron pipeline.'}},
+    },
+    "PCT":{ac:{n:'Proximal Convoluted Tubule (PCT)',d:'First tubule, in cortex. Microvilli brush border maximises surface area. Reabsorbs ALL glucose (SGLT2 transporters - saturation causes glycosuria), ALL amino acids, ALL vitamins, most electrolytes, 60-70% water. Converts vitamin D to calcitriol. Always constant - not hormonal.'},si:{n:'Greedy Reclaim Belt',d:'The hungriest section. Grabs back all sugar (diabetes overwhelms transporters = sugar in pee), all protein building blocks, all vitamins, most salts, and 60-70% of water. No hormone orders - always does maximum effort.'}},
+    "Descending Loop":{ac:{n:'Descending Loop of Henle',d:'Dips into medulla. Permeable to water ONLY. Water exits by osmosis into hyperosmotic medulla. ~20% more water reclaimed. ~90% of filtered water recovered by end of descending loop.'},si:{n:'Water Slide Down',d:'Tube dives into the salty core. Walls leaky to water only - water drains out passively. 90% of water is back in the blood by the U-turn. Filtrate is now very concentrated.'}},
+    "Ascending Loop":{ac:{n:'Ascending Loop of Henle',d:'Returns to cortex. Impermeable to water. Actively pumps Na+, K+, Cl- out - builds medullary hyperosmotic gradient. This is the countercurrent multiplier. Loop diuretics (furosemide) block this pump - less reabsorption - more urine.'},si:{n:'Salt Pumper Going Up',d:'Waterproof return pipe. Pumps salts out into surrounding tissue making it super salty. That salt gradient is what pulled water out of the descending limb. The two loops work as a team: the countercurrent multiplier.'}},
+    "DCT":{ac:{n:'Distal Convoluted Tubule (DCT)',d:'In cortex. Hormone-regulated unlike PCT. Aldosterone: reabsorbs Na+ from DCT (water follows, raises BP). Acid/base: acidosis - secretes H+, reabsorbs HCO3-. Alkalosis - secretes HCO3-, reabsorbs H+. Also secretes ammonia, drugs, toxins. Aldosterone causes Na+ reabsorption AND K+ secretion simultaneously.'},si:{n:'Smart Adjuster',d:"Takes hormone orders. Aldosterone says: suck more salt in (water follows, BP rises, K+ gets kicked out). Blood too acidic? Eject H+ ions. Blood too basic? Eject bicarbonate. Got toxins? Secret them out. The body's chemistry correction station."}},
+    "Collecting Duct":{ac:{n:'Collecting Duct',d:'ADH from posterior pituitary inserts aquaporin channels into walls - water reabsorbed - concentrated urine. No ADH = dilute urine. Drains into renal papilla. 180 L filtered daily leads to only 1.5-2 L urine.'},si:{n:'Final Volume Boss',d:'Dehydrated? Brain sends ADH - opens water channels (aquaporins) in duct wall - water floods back into blood - dark concentrated pee. Well hydrated? No ADH - water stays - pale pee. 180 litres filtered, ~1.5 litres leave as pee!'}},
+  },
+  "Hormones":{
+    "ADH":{ac:{n:'ADH (Anti-Diuretic Hormone)',d:'Released from POSTERIOR PITUITARY when osmoreceptors in hypothalamus detect high plasma osmolarity (dehydration - cells shrink). ADH travels to collecting duct - opens aquaporins - more water reabsorbed - small dark urine. Plasma osmolarity falls - negative feedback stops ADH.'},si:{n:'The Water-Saver Alarm',d:"When blood gets too thick (dehydration), shrink sensors in the hypothalamus fire an alarm. ADH hormone travels from pituitary to collecting duct and opens water doors (aquaporins). Water floods back into blood. Pee goes dark and small. Once blood is diluted the alarm switches off."}},
+    "Aldosterone":{ac:{n:'Aldosterone',d:'Steroid from ADRENAL CORTEX. Released in response to low Na+, high K+, or angiotensin II (RAAS). Action: stimulates Na+ reabsorption in DCT via Na/K-ATPase - water follows - increases blood volume and BP. Also causes K+ secretion. Na+ and K+ must stay in balance.'},si:{n:'The Salt Commander',d:"Hormone from adrenal gland (sitting on top of kidneys) that yells at the DCT: absorb more salt! Water follows salt - blood volume increases - blood pressure rises. K+ gets kicked out into the tube to balance. Low sodium or low blood pressure triggers aldosterone release."}},
+    "Angiotensin II":{ac:{n:'Angiotensin II',d:'Produced via RAAS cascade: Low BP - JG cells release renin - renin cleaves angiotensinogen - angiotensin I - ACE in lungs converts to angiotensin II. Five effects: (1) Vasoconstriction raises BP, (2) Stimulates aldosterone - Na+ retention, (3) Stimulates ADH - water retention, (4) Stimulates thirst, (5) Stimulates noradrenaline - vasoconstriction. ACE inhibitors block this step.'},si:{n:'The Blood Pressure Boss',d:'When BP drops, the kidneys start a chemical chain: renin - angiotensin I - lungs convert - angiotensin II. This boss hormone does 5 things at once: squeezes blood vessels, orders adrenals to grab more salt (aldosterone), tells pituitary to save water (ADH), makes you thirsty, and releases adrenaline-like chemicals (noradrenaline). All raise BP.'}},
+    "Renin":{ac:{n:'Renin',d:'Enzyme from JUXTAGLOMERULAR (JG) cells in the wall of the afferent arteriole. Released when: low arteriole pressure, low Na+ in filtrate (detected by macula densa cells), or sympathetic nervous system activation. Cleaves angiotensinogen into angiotensin I. First step of RAAS.'},si:{n:'The Alarm Trigger',d:"Pressure sensor in the kidney's input blood vessel. When it senses low pressure it releases renin - an enzyme that kicks off the entire RAAS blood-pressure-raising chain reaction. The first domino."}},
+    "EPO":{ac:{n:'Erythropoietin (EPO)',d:'Glycoprotein hormone from EPOS cells in kidney cortex. Released in response to hypoxia (low O2). Travels to RED BONE MARROW - stimulates RBC (erythrocyte) production - more O2 transport - negative feedback reduces EPO. Used illegally in sports, therapeutically in CKD anaemia.'},si:{n:'RBC Factory Signal',d:'Oxygen sensor cells in kidney notice low O2 and release EPO hormone. EPO tells bone marrow: MAKE MORE RED BLOOD CELLS NOW. More RBCs = more oxygen = problem fixed = EPO production slows. Athletes illegally inject this to boost RBC count and endurance.'}},
+    "Calcitriol":{ac:{n:'Calcitriol (Active Vitamin D)',d:'Skin makes cholecalciferol from sunlight. Liver makes calcidiol. Kidney PCT converts calcidiol to CALCITRIOL. Functions: enhances Ca2+ and phosphate gut absorption, reduces cancer risk, protects cardiovascular and brain health, immune modulation, anti-inflammatory, regulates blood glucose.'},si:{n:'Vitamin D Finished Product',d:'The kidney does the final assembly step to make vitamin D actually work. Active vitamin D tells your gut to absorb calcium (bones need it), fights cancer, protects heart and brain, keeps immunity strong. Without healthy kidneys, vitamin D cannot be activated.'}},
+  },
+  "Micturition":{
+    "Involuntary Reflex":{ac:{n:'Micturition Reflex (Involuntary Phase)',d:'1. Bladder fills with urine - walls stretch. 2. Stretch receptors detect distension. 3. Sensory signal to micturition centre in spinal cord. 4. Parasympathetic signal via pelvic nerves - detrusor muscle contracts and internal sphincter opens. 5. Signal also goes to PONS creating conscious urge.'},si:{n:'The Automatic Alarm',d:"Bladder stretches - stretch sensors in walls fire - signal goes to spinal cord - automatic: bladder walls start squeezing (detrusor) and the inner door starts opening (internal sphincter). A signal also shoots up to the brain's pons so you FEEL the urge."}},
+    "Voluntary Response":{ac:{n:'Voluntary Response',d:'Signal reaches PONS (brainstem) - conscious awareness of need to urinate. YES: relax external sphincter (skeletal muscle, voluntary) - urine flows. NO: voluntarily contract external sphincter - detrusor relaxes, urge fades temporarily. Children lack full skeletal muscle control - cannot voluntarily hold it.'},si:{n:'The Manual Override',d:"Once the urge signal hits the pons, YOU decide: go or wait? Go = relax the outer door (external sphincter - same muscle type as biceps, fully voluntary). Wait = clench the outer door, bladder relaxes, urge fades briefly. Toddlers can't control it because they're still developing skeletal muscle control."}},
+    "Detrusor Muscle":{ac:{n:'Detrusor Muscle',d:'3-layer smooth muscle forming the bladder wall. Parasympathetic pelvic nerves trigger contraction to void. Sympathetic hypogastric nerve causes relaxation to store. Overactive detrusor = urge incontinence.'},si:{n:'The Bladder Squeezer',d:"The muscular wall of the bladder. Contracts when the parasympathetic nervous system fires (the rest-and-digest system includes urination). Like squeezing a water balloon - pushes urine out. Overactive = urge incontinence, can't hold it."}},
+    "Sphincters":{ac:{n:'Urethral Sphincters',d:'Internal urethral sphincter: smooth muscle, involuntary (ANS). Opens automatically during micturition. External urethral sphincter: skeletal muscle, voluntary (somatic). Under conscious control. Both must relax for normal voiding.'},si:{n:'The Two Doors',d:"Inner door (internal sphincter): automatic - the ANS runs it, you can't control it. Outer door (external sphincter): you control this - it's skeletal muscle like your bicep. Both must open to urinate. You can consciously clench the outer one to hold on."}},
+  },
+  "Acid-Base and Electrolytes":{
+    "Acidosis Response":{ac:{n:'Renal Response to Acidosis',d:'Blood too acidic (low pH, excess H+). DCT response: (1) Secretes H+ from blood into tubule - exits in urine. (2) Reabsorbs HCO3- (bicarbonate base) from tubule into blood - neutralises H+. Result: urine pH decreases (more acidic urine), blood pH rises back toward normal 7.35-7.45.'},si:{n:'Blood Too Acidic: Fix It',d:'Too many H+ ions in blood. DCT acts as bouncer: throws H+ out of blood into the pee tube (exits with urine). At same time grabs bicarbonate (HCO3- - a natural antacid) from tube into blood to neutralise the excess acid. Pee gets more acidic, blood returns to normal.'}},
+    "Alkalosis Response":{ac:{n:'Renal Response to Alkalosis',d:'Blood too basic (high pH, excess HCO3-). DCT response: (1) Secretes HCO3- from blood into tubule - exits in urine. (2) Reabsorbs H+ from tubule into blood - neutralises excess HCO3-. Result: urine pH increases (more alkaline urine), blood pH drops back toward normal.'},si:{n:'Blood Too Basic: Fix It',d:'Too much bicarbonate in blood. DCT flips it: bicarbonate gets thrown out into the urine tube and leaves with pee. H+ ions get grabbed from the tube into blood to lower pH. Pee gets more alkaline, blood pH returns to normal. Kidneys are the ONLY organ that can fully correct acid/base imbalances.'}},
+    "Sodium Balance":{ac:{n:'Sodium (Na+) Reabsorption Distribution',d:'Na+ accounts for 90-95% of extracellular fluid solutes. Distribution: PCT reabsorbs 65% (always, not hormonal). Loop of Henle reabsorbs 25% (always). DCT reabsorbs remaining 10% - THIS portion is controlled by aldosterone. Aldosterone - Na+ channels in DCT - more Na+ reabsorbed - water follows - increased blood volume and BP.'},si:{n:'The Salt Split',d:'Of all salt filtered, here is the split: PCT grabs 65% automatically. Loop grabs another 25% automatically. The last 10% is where aldosterone turns the dial - and that 10% makes ALL the difference to blood pressure and fluid balance.'}},
+  },
+  "Clinical Reference":{
+    "GFR":{ac:{n:'Glomerular Filtration Rate (GFR)',d:'Normal = 125 mL/min = 180 L/day. eGFR estimated from serum creatinine + age + sex + weight. Creatinine = ideal marker: produced at constant rate by muscle, freely filtered, NOT reabsorbed or secreted. Decreased GFR = sign of kidney damage. Stages of CKD: G1 greater than 90 (normal), G2 60-89, G3a 45-59, G3b 30-44, G4 15-29, G5 less than 15 = kidney failure.'},si:{n:'Filter Speed Test',d:'Normal: 125 mL/min (a coffee mug of blood cleaned every minute). Doctors measure creatinine in blood to estimate it - high creatinine = kidneys not clearing it fast enough = GFR too low = kidneys struggling. Below 15 = kidney failure = dialysis or transplant needed.'}},
+    "Glycosuria":{ac:{n:'Glycosuria - Glucose in Urine',d:'Glucose should not appear in urine. PCT SGLT2 transporters reabsorb ALL glucose. If blood glucose exceeds ~180 mg/dL (renal threshold), transporters saturate - glucose spills into urine. Main cause: diabetes mellitus. Also pregnancy, Fanconi syndrome, SGLT2 inhibitor drugs (therapeutic glycosuria used to treat diabetes).'},si:{n:'Sugar in Pee',d:"Normally zero sugar in pee - PCT grabs it all back. But if blood sugar rockets too high (diabetes), the sugar-grabbers get overwhelmed and sugar slips through. SGLT2 inhibitor drugs intentionally cause glycosuria to lower blood glucose - it's now actually a diabetes treatment!"}},
+    "Proteinuria":{ac:{n:'Proteinuria - Protein in Urine',d:'Proteins too large for normal glomerular filtration. If glomerular membrane or podocytes are damaged, proteins leak through. Associated with: heart failure, hypertension, diabetic nephropathy, glomerulonephritis. Persistent proteinuria = significant red flag for kidney damage.'},si:{n:'Protein in Pee',d:'Proteins are too big to fit through the filter - healthy pee has zero. Protein in urine means the filter mesh is DAMAGED. Causes: high blood pressure destroying the filter over time, diabetes, infection. Caught early you can slow the damage. Urine dipstick detects this.'}},
+    "Hematuria":{ac:{n:'Hematuria - Blood in Urine',d:'RBCs in urine (gross = visible; microscopic = dipstick or microscopy). Far too large for normal filtration. Causes: kidney stones (trauma to ureter/urethra), UTI, kidney or bladder cancer, trauma, glomerulonephritis. Always requires investigation.'},si:{n:'Blood in Pee',d:'Red blood cells are WAY too big for the filter - should NEVER appear in urine. If they do, something is physically broken: a stone scraping a tube, infection causing bleeding, or a tumour. Even microscopic blood on a dipstick needs investigation. Never normal.'}},
+    "Ketonuria":{ac:{n:'Ketonuria - Ketones in Urine',d:'Ketones = fatty acid metabolism byproducts when body burns fat (no available glucose). Causes: untreated diabetes mellitus (cannot use glucose, burns fat instead), starvation, keto diet. Diabetic ketoacidosis (DKA) = medical emergency requiring hospital treatment.'},si:{n:'Ketones in Pee',d:"When the body runs out of useable sugar or can't use it (uncontrolled diabetes), it burns fat instead. Burning fat produces ketones - acidic waste. Small amounts expected on keto diet. In uncontrolled diabetes, ketone levels become dangerously high - DKA - a life-threatening emergency."}},
+    "Nitrituria":{ac:{n:'Nitrituria - Nitrites in Urine',d:'Gram-negative bacteria (E. coli, Klebsiella, Proteus) convert urinary nitrates to nitrites. Detected on urine dipstick. Strong indicator of UTI. Combined with leukocyte esterase (pyuria) = high specificity for UTI diagnosis.'},si:{n:"Bacteria's Calling Card",d:"Certain UTI bacteria (like E. coli) eat urinary nitrates and produce nitrites as waste. Detecting nitrites on a dipstick = catching bacteria red-handed. Combine with white blood cells in urine (pyuria) = near-certain UTI diagnosis."}},
+    "Pyuria":{ac:{n:'Pyuria - WBCs in Urine',d:'Leukocytes in urine detected by microscopy or leukocyte esterase dipstick. Indicates urinary tract inflammation or infection. Most common: UTI. Also: pyelonephritis (kidney infection), interstitial nephritis, sterile pyuria (TB of urinary tract).'},si:{n:'White Blood Cells in Pee',d:"WBCs in urine = immune system fighting a battle in the urinary tract. A quick dipstick catches this via leukocyte esterase. Almost always means infection. If it keeps coming back despite antibiotics, doctors look for rarer causes like TB of the urinary tract."}},
+  },
+};
+
+const FLOWS={
+  normal:{emoji:'💧',lbl:'Normal Urine Formation',desc:'Step-by-step journey of blood through the nephron under normal conditions.',
+    ac:`graph TD\nA["Renal Artery: blood arrives"] --> B["Afferent arteriole (wider) creates high pressure"]\nB --> C["Glomerulus - GFR 125 mL/min\\nProteins and RBCs stay in blood"]\nC --> D["Bowmans Capsule - filtrate collected"]\nD --> E["PCT: ALL glucose, AAs, vitamins reabsorbed\\n60 to 70% water reabsorbed by osmosis"]\nE --> F["Descending Loop: 20% more water out\\n90% water total now recovered"]\nF --> G["Ascending Loop: Na+ K+ Cl- pumped out\\nBuilds medullary gradient"]\nG --> H["DCT: hormonal fine-tuning\\nacid/base adjustment"]\nH --> I["Collecting Duct: ADH sets final volume"]\nI --> J["Renal Pelvis to Ureter to Bladder"]\nJ --> K["Urine: 1.5 to 2 L per day\\n96% water, 2% urea, 2% solutes"]`,
+    si:`graph TD\nA["Dirty blood arrives"] --> B["Pressure builds in narrow vessel"]\nB --> C["Pressure Mesh - everything small blasted through\\nBig stuff stays behind"]\nC --> D["Catching Cup - filtrate collected"]\nD --> E["Reclaim Belt - grabs all sugar, protein bits, vitamins\\n60 to 70% water saved"]\nE --> F["Water Slide Down - water leaks out passively\\n90% water total saved"]\nF --> G["Salt Pumper Up - pumps salt out\\nMakes core salty, sucks out more water"]\nG --> H["Smart Adjuster - hormone orders\\nFine-tunes salt and acid levels"]\nH --> I["Release Valve - brain decides final water amount"]\nI --> J["Exits kidney, squeezes down to bladder"]\nJ --> K["Pee: about 1.5 L per day"]`},
+  adh:{emoji:'🏜️',lbl:'Dehydration and ADH',desc:'How the brain detects dehydration and uses ADH to conserve water.',
+    ac:`graph TD\nA["Dehydration - plasma osmolarity rises"] --> B["Osmoreceptors in hypothalamus shrink"]\nB --> C["Hypothalamus signals posterior pituitary"]\nC --> D["ADH released into bloodstream"]\nD --> E["ADH reaches collecting duct"]\nE --> F["Aquaporin water channels inserted in duct walls"]\nF --> G["Water reabsorbed from duct into peritubular capillaries"]\nG --> H["Small volume of dark concentrated urine"]\nH --> I["Plasma osmolarity falls - negative feedback"]\nI --> J["ADH release stops"]\nstyle A fill:#ef4444,color:#fff\nstyle H fill:#f97316,color:#fff\nstyle J fill:#22c55e,color:#fff`,
+    si:`graph TD\nA["You are dehydrated! Blood too concentrated"] --> B["Shrink sensors in hypothalamus fire - cells literally shrink"]\nB --> C["Brain signals pituitary gland"]\nC --> D["ADH hormone released, travels through blood"]\nD --> E["ADH reaches collecting duct"]\nE --> F["ADH opens secret water doors (aquaporins) in duct walls"]\nF --> G["Water floods BACK into blood from collecting duct"]\nG --> H["Tiny dark pee!"]\nH --> I["Blood less concentrated - sensors relax"]\nI --> J["Alarm off - no more ADH"]\nstyle A fill:#ef4444,color:#fff\nstyle H fill:#f97316,color:#fff\nstyle J fill:#22c55e,color:#fff`},
+  raas:{emoji:'📉',lbl:'Low BP and RAAS',desc:'The renin-angiotensin-aldosterone cascade that restores blood pressure.',
+    ac:`graph TD\nA["Low Blood Pressure detected by JG cells\\nin afferent arteriole"] --> B["Renin enzyme released from JG cells"]\nB --> C["Renin cleaves Angiotensinogen to Angiotensin I"]\nC --> D["ACE in lungs converts Angiotensin I to Angiotensin II"]\nD --> E1["Vasoconstriction raises BP"]\nD --> E2["Aldosterone from adrenal cortex\\nNa+ reabsorption in DCT\\nwater follows, blood volume rises"]\nD --> E3["ADH from pituitary\\nwater reabsorption in collecting duct"]\nD --> E4["Thirst sensation triggers fluid intake"]\nD --> E5["Noradrenaline causes vasoconstriction"]\nE1 & E2 & E3 & E4 & E5 --> F["Blood Pressure Restored"]\nstyle A fill:#ef4444,color:#fff\nstyle F fill:#22c55e,color:#fff`,
+    si:`graph TD\nA["Blood pressure drops! Kidney pressure sensors fire"] --> B["Kidneys release RENIN enzyme"]\nB --> C["Renin chops a blood protein into Angiotensin I"]\nC --> D["Lungs do final chop into Angiotensin II - The Boss"]\nD --> E1["Squeezes blood vessels"]\nD --> E2["Orders adrenal gland: release aldosterone!\\nGrabs more salt, water follows"]\nD --> E3["Orders pituitary: release ADH!\\nWater reabsorbed in collecting duct"]\nD --> E4["Makes you feel thirsty"]\nD --> E5["Releases noradrenaline for more vessel squeezing"]\nE1 & E2 & E3 & E4 & E5 --> F["Blood Pressure Restored!"]\nstyle A fill:#ef4444,color:#fff\nstyle F fill:#22c55e,color:#fff`},
+  acidosis:{emoji:'🔴',lbl:'Acidosis: pH Fix',desc:'How the kidneys correct blood that is too acidic via DCT.',
+    ac:`graph TD\nA["Blood pH too low - Acidosis\\nExcess H+ in blood"] --> B["DCT detects acidic blood"]\nB --> C["H+ secreted FROM blood INTO DCT tubule"]\nB --> D["HCO3- reabsorbed FROM tubule INTO blood"]\nC --> E["H+ excreted in urine - urine more acidic"]\nD --> F["HCO3- neutralises excess H+ in blood"]\nE & F --> G["Blood pH rises back to around 7.4"]\nstyle A fill:#ef4444,color:#fff\nstyle G fill:#22c55e,color:#fff`,
+    si:`graph TD\nA["Blood too acidic! Too many H+ ions"] --> B["DCT spots the problem"]\nB --> C["DCT ejects H+ OUT of blood into pee tube"]\nB --> D["DCT grabs bicarbonate HCO3- from tube back into blood\\nnatural antacid"]\nC --> E["Urine gets more acidic"]\nD --> F["Bicarbonate neutralises acid in blood\\nlike Gaviscon for your blood"]\nE & F --> G["Blood pH back to normal!"]\nstyle A fill:#ef4444,color:#fff\nstyle G fill:#22c55e,color:#fff`},
+  alkalosis:{emoji:'🔵',lbl:'Alkalosis: pH Fix',desc:'How the kidneys correct blood that is too basic via DCT.',
+    ac:`graph TD\nA["Blood pH too high - Alkalosis\\nExcess HCO3- in blood"] --> B["DCT detects alkaline blood"]\nB --> C["HCO3- secreted FROM blood INTO DCT tubule"]\nB --> D["H+ reabsorbed FROM tubule INTO blood"]\nC --> E["HCO3- excreted in urine - urine more alkaline"]\nD --> F["H+ neutralises excess HCO3- in blood"]\nE & F --> G["Blood pH drops back to around 7.4"]\nstyle A fill:#3b82f6,color:#fff\nstyle G fill:#22c55e,color:#fff`,
+    si:`graph TD\nA["Blood too basic! Too much bicarbonate HCO3-"] --> B["DCT spots the problem"]\nB --> C["DCT ejects bicarbonate OUT of blood into pee tube"]\nB --> D["DCT grabs H+ back from tube into blood"]\nC --> E["Urine gets more alkaline"]\nD --> F["H+ neutralises excess base in blood"]\nE & F --> G["Blood pH back to normal!"]\nstyle A fill:#3b82f6,color:#fff\nstyle G fill:#22c55e,color:#fff`},
+  epo:{emoji:'🩸',lbl:'Hypoxia and EPO',desc:'How the kidney detects low oxygen and triggers red blood cell production.',
+    ac:`graph TD\nA["Low blood oxygen - Hypoxia\\ne.g. high altitude or anaemia"] --> B["EPOS cells in kidney cortex detect hypoxia"]\nB --> C["EPOS cells produce and release EPO (Erythropoietin)"]\nC --> D["EPO travels to Red Bone Marrow"]\nD --> E["Erythrocyte (RBC) production increases"]\nE --> F["More RBCs mean more O2 transport"]\nF --> G["Blood O2 levels rise"]\nG --> H["EPOS cells detect increased O2\\nreduce EPO production"]\nH --> I["Negative feedback loop complete"]\nstyle A fill:#ef4444,color:#fff\nstyle I fill:#22c55e,color:#fff`,
+    si:`graph TD\nA["Not enough oxygen! e.g. altitude or anaemia"] --> B["Kidney O2 sensors (EPOS cells) notice"]\nB --> C["Kidney releases EPO hormone"]\nC --> D["EPO travels to bone marrow"]\nD --> E["Bone marrow: MAKE MORE RED BLOOD CELLS!"]\nE --> F["More RBCs means more O2 in blood"]\nF --> G["Oxygen levels recover"]\nG --> H["EPOS cells relax and stop making EPO"]\nH --> I["Negative feedback loop complete!"]\nstyle A fill:#ef4444,color:#fff\nstyle I fill:#22c55e,color:#fff`},
+};
+
+const URINE=[
+  {sub:'Glucose',cond:'Glycosuria',cause:'Diabetes mellitus - blood glucose exceeds renal threshold ~180 mg/dL, saturating PCT SGLT2 transporters',ok:false},
+  {sub:'Protein / Albumin',cond:'Proteinuria',cause:'Heart failure, hypertension, diabetic nephropathy - glomerular membrane or podocyte damage',ok:false},
+  {sub:'Nitrites',cond:'Nitrituria',cause:'UTI - gram-negative bacteria (E. coli, Klebsiella) convert urinary nitrates to nitrites',ok:false},
+  {sub:'Ketones',cond:'Ketonuria',cause:'Uncontrolled diabetes, starvation, keto diet - body burns fat producing ketone waste',ok:false},
+  {sub:'Red Blood Cells',cond:'Hematuria',cause:'Kidney stones, UTI, bladder or kidney cancer, trauma, glomerulonephritis',ok:false},
+  {sub:'White Blood Cells',cond:'Pyuria',cause:'UTI, pyelonephritis, interstitial nephritis, TB of urinary tract',ok:false},
+  {sub:'Water (96%)',cond:'-',cause:'Normal constituent of urine',ok:true},
+  {sub:'Urea (2%)',cond:'-',cause:'Normal waste from protein (amino acid) metabolism',ok:true},
+  {sub:'Solutes (2%)',cond:'-',cause:'Creatinine, uric acid, electrolytes, ammonia - all normal',ok:true},
+];
+
+const GFR=[
+  {s:'G1',r:'>90',l:'Normal or High',c:'#22c55e'},
+  {s:'G2',r:'60-89',l:'Mildly Decreased',c:'#84cc16'},
+  {s:'G3a',r:'45-59',l:'Mild to Moderate Decrease',c:'#eab308'},
+  {s:'G3b',r:'30-44',l:'Moderate to Severe Decrease',c:'#f97316'},
+  {s:'G4',r:'15-29',l:'Severely Decreased',c:'#ef4444'},
+  {s:'G5',r:'<15',l:'Kidney Failure - Dialysis or Transplant',c:'#dc2626'},
+];
+
+// SYSTEM MAP
+function MacroKidney({sel,setSel,dark}){
+  const s=k=>sel===k;
+  return(
+    <svg viewBox="0 0 380 420" className="w-full h-full" style={{maxWidth:'340px'}}>
+      <defs>
+        <radialGradient id="gCortex" cx="50%" cy="40%"><stop offset="0%" stopColor="#14b8a6" stopOpacity=".25"/><stop offset="100%" stopColor="#0d9488" stopOpacity=".08"/></radialGradient>
+        <radialGradient id="gMedulla" cx="50%" cy="45%"><stop offset="0%" stopColor="#8b5cf6" stopOpacity=".3"/><stop offset="100%" stopColor="#6d28d9" stopOpacity=".1"/></radialGradient>
+        <linearGradient id="gArtery" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#ef4444"/><stop offset="100%" stopColor="#dc2626"/></linearGradient>
+        <linearGradient id="gVein" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
+        <linearGradient id="gUreter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06b6d4"/><stop offset="100%" stopColor="#0891b2"/></linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      {/* Renal artery + vein entering hilum */}
+      <path d="M10 145 Q60 145 100 158 Q130 168 148 178" fill="none" stroke="url(#gArtery)" strokeWidth="5" strokeLinecap="round" className="flow-line"/>
+      <path d="M10 195 Q60 195 100 185 Q130 178 148 172" fill="none" stroke="url(#gVein)" strokeWidth="5" strokeLinecap="round" className="flow-line" style={{animationDirection:'reverse'}}/>
+      <text x="4" y="139" fill="#ef4444" fontSize="9" fontWeight="600" fontFamily="Inter">Renal Artery</text>
+      <text x="4" y="210" fill="#3b82f6" fontSize="9" fontWeight="600" fontFamily="Inter">Renal Vein</text>
+      {/* Adrenal gland */}
+      <path d="M170 28 Q200 18 230 28 Q225 42 200 46 Q175 42 170 28 Z" fill={dark?'#854d0e':'#fbbf24'} opacity=".5" stroke="#ca8a04" strokeWidth="1"/>
+      <text x="178" y="36" fill="#ca8a04" fontSize="8" fontFamily="Inter">Adrenal Gland</text>
+      {/* Capsule */}
+      <g className={`hs ${s('capsule')?'on':''}`} onClick={()=>setSel('capsule')}>
+        <path d="M190 42 C300 42 320 130 296 230 C272 310 232 340 190 340 C148 340 108 310 84 230 C60 130 80 42 190 42 Z" fill="none" stroke={s('capsule')?'#94a3b8':'#64748b'} strokeWidth={s('capsule')?2.5:1.2} strokeDasharray="5,4"/>
+      </g>
+      {/* Cortex */}
+      <g className={`hs ${s('cortex')?'on':''}`} onClick={()=>setSel('cortex')}>
+        <path d="M190 50 C292 50 310 134 288 228 C266 306 228 332 190 332 C152 332 114 306 92 228 C70 134 88 50 190 50 Z" fill={s('cortex')?'#0d9488':'url(#gCortex)'} stroke={s('cortex')?'#0d9488':'none'} strokeWidth="2" opacity={s('cortex')?.35:1}/>
+        {/* Tiny nephron hints in cortex */}
+        {[[140,80],[230,85],[120,120],[250,125],[135,275],[240,270],[160,300],[220,300]].map(([x,y],i)=>(
+          <circle key={i} cx={x} cy={y} r="3" fill={dark?'#2dd4bf':'#0d9488'} opacity=".25"/>
+        ))}
+      </g>
+      {/* Medulla with pyramid striations */}
+      <g className={`hs ${s('medulla')?'on':''}`} onClick={()=>setSel('medulla')}>
+        <path d="M190 82 C260 82 274 142 254 216 C240 260 216 280 190 286 C164 280 140 260 126 216 C106 142 120 82 190 82 Z" fill={s('medulla')?'#7c3aed':'url(#gMedulla)'} stroke={s('medulla')?'#7c3aed':'none'} strokeWidth="2" opacity={s('medulla')?.4:1}/>
+        {/* Pyramid striations - radial lines converging to papillae */}
+        {[[-30,-20,-10,0,10,20,30]].flat().map((angle,i)=>{
+          const rad=(angle*Math.PI)/180;
+          const x1=190+Math.sin(rad)*75, y1=120+Math.cos(rad)*-20;
+          const x2=190+Math.sin(rad)*20, y2=230+Math.cos(rad)*-10;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={dark?'#6d28d9':'#a78bfa'} strokeWidth=".6" opacity=".4"/>;
+        })}
+      </g>
+      {/* Calyces - multiple minor cups converging */}
+      <g className={`hs ${s('calyces')?'on':''}`} onClick={()=>setSel('calyces')}>
+        {/* Minor calyces - small cups at pyramid tips */}
+        <path d="M160 210 Q155 220 160 230 Q168 236 176 230 Q181 220 176 210 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
+        <path d="M186 205 Q181 215 186 225 Q194 231 202 225 Q207 215 202 205 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
+        <path d="M173 225 Q168 235 173 245 Q181 251 189 245 Q194 235 189 225 Z" fill={s('calyces')?'#f59e0b':'#f59e0b'} opacity=".7" stroke="#d97706" strokeWidth="1"/>
+        {/* Major calyx merging */}
+        <path d="M168 230 Q178 250 190 252 Q202 250 207 230" fill="none" stroke="#d97706" strokeWidth="1.5" opacity=".6"/>
+      </g>
+      {/* Pelvis - funnel shape */}
+      <g className={`hs ${s('pelvis')?'on':''}`} onClick={()=>setSel('pelvis')}>
+        <path d="M170 248 Q162 260 158 275 Q155 290 165 298 Q178 306 190 300 Q198 294 195 275 Q192 260 184 248 Z" fill={s('pelvis')?'#f97316':'#f97316'} stroke="#ea580c" strokeWidth="1.5" opacity=".85"/>
+      </g>
+      {/* Ureter */}
+      <g className={`hs ${s('ureter')?'on':''}`} onClick={()=>setSel('ureter')}>
+        <path d="M178 300 Q172 340 178 370 Q184 395 200 405" fill="none" stroke="url(#gUreter)" strokeWidth={s('ureter')?7:5} strokeLinecap="round"/>
+        {/* Peristalsis wave markers */}
+        <ellipse cx="176" cy="340" rx="4" ry="2" fill="#06b6d4" opacity=".5"/>
+        <ellipse cx="180" cy="370" rx="4" ry="2" fill="#06b6d4" opacity=".4"/>
+      </g>
+      {/* Hilum notch */}
+      <path d="M148 155 Q140 175 148 195" fill="none" stroke={dark?'#475569':'#94a3b8'} strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Labels with leader lines */}
+      <line x1="296" y1="60" x2="270" y2="75" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+      <text x="298" y="63" fill={dark?'#94a3b8':'#64748b'} fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('capsule')}>Capsule</text>
+      <line x1="310" y1="110" x2="275" y2="120" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+      <text x="312" y="113" fill={dark?'#5eead4':'#0d9488'} fontSize="9" fontWeight="600" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('cortex')}>Cortex</text>
+      <line x1="300" y1="165" x2="258" y2="170" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+      <text x="302" y="168" fill={dark?'#a78bfa':'#7c3aed'} fontSize="9" fontWeight="600" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('medulla')}>Medulla</text>
+      <line x1="230" y1="218" x2="210" y2="215" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+      <text x="232" y="221" fill="#d97706" fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('calyces')}>Calyces</text>
+      <text x="130" y="280" fill={dark?'#fdba74':'#ea580c'} fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('pelvis')}>Pelvis</text>
+      <line x1="130" y1="282" x2="160" y2="275" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+      <text x="210" y="385" fill="#06b6d4" fontSize="9" fontWeight="500" fontFamily="Inter" className="cursor-pointer" onClick={()=>setSel('ureter')}>Ureter</text>
+      <line x1="208" y1="382" x2="192" y2="378" stroke={dark?'#475569':'#cbd5e1'} strokeWidth=".7"/>
+    </svg>
+  );
+}
+
+function MicroNephron({sel,setSel,dark}){
+  const s=k=>sel===k;
+  const act=k=>s(k)?1:.65;
+  return(
+    <svg viewBox="0 0 340 460" className="w-full h-full" style={{maxWidth:'320px'}}>
+      <defs>
+        <radialGradient id="gGlom"><stop offset="0%" stopColor="#fca5a5"/><stop offset="100%" stopColor="#ef4444"/></radialGradient>
+        <linearGradient id="gPCT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#34d399"/><stop offset="100%" stopColor="#10b981"/></linearGradient>
+        <linearGradient id="gDesc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="#2563eb"/></linearGradient>
+        <linearGradient id="gAsc" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#c4b5fd"/><stop offset="100%" stopColor="#8b5cf6"/></linearGradient>
+        <linearGradient id="gDCT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#fcd34d"/><stop offset="100%" stopColor="#f59e0b"/></linearGradient>
+        <linearGradient id="gCD" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#67e8f9"/><stop offset="100%" stopColor="#06b6d4"/></linearGradient>
+        {/* Flow dot paths */}
+        <path id="pPCT" d="M100 112 Q100 135 122 135 Q152 135 152 158 Q152 178 122 178 Q88 178 88 198"/>
+        <path id="pDesc" d="M88 198 Q86 290 100 340 Q106 365 122 375"/>
+        <path id="pAsc" d="M122 375 Q142 368 152 338 Q168 280 168 215"/>
+        <path id="pDCT" d="M168 215 Q168 188 190 188 Q222 188 222 168 Q222 148 194 148 Q168 148 168 130"/>
+        <path id="pCD" d="M168 130 Q180 118 192 118 Q216 118 226 142 Q236 172 236 240 Q236 330 242 395"/>
+      </defs>
+      {/* Cortex / Medulla zone */}
+      <rect x="0" y="215" width="340" height="245" fill={dark?'rgba(109,40,217,.06)':'rgba(139,92,246,.04)'} rx="4"/>
+      <rect x="0" y="0" width="340" height="215" fill={dark?'rgba(13,148,136,.04)':'rgba(20,184,166,.03)'} rx="4"/>
+      <line x1="0" y1="215" x2="310" y2="215" stroke={dark?'#334155':'#cbd5e1'} strokeWidth="1" strokeDasharray="4,3"/>
+      <text x="6" y="208" fill={dark?'#5eead4':'#0d9488'} fontSize="8" fontFamily="Inter" fontWeight="600" opacity=".6">CORTEX</text>
+      <text x="6" y="228" fill={dark?'#a78bfa':'#7c3aed'} fontSize="8" fontFamily="Inter" fontWeight="600" opacity=".6">MEDULLA</text>
+      {/* Afferent arteriole - wider */}
+      <path d="M18 52 Q50 52 72 72" fill="none" stroke="#ef4444" strokeWidth="6" strokeLinecap="round"/>
+      <text x="4" y="46" fill="#ef4444" fontSize="9" fontWeight="600" fontFamily="Inter">Afferent (wide)</text>
+      {/* Efferent arteriole - narrower */}
+      <path d="M120 72 Q142 54 172 54" fill="none" stroke="#f87171" strokeWidth="3.5" strokeLinecap="round"/>
+      <text x="140" y="48" fill="#f87171" fontSize="9" fontWeight="600" fontFamily="Inter">Efferent (narrow)</text>
+      {/* Pressure arrows showing squeeze */}
+      <text x="54" y="44" fill={dark?'#fca5a5':'#dc2626'} fontSize="11" fontFamily="Inter">{'>>>'}</text>
+      {/* Bowman's capsule - double wall */}
+      <g className={`hs ${s('bowman')?'on':''}`} onClick={()=>setSel('bowman')} opacity={act('bowman')}>
+        <circle cx="96" cy="82" r="34" fill="none" stroke="#0ea5e9" strokeWidth={s('bowman')?3:1.2} opacity={s('bowman')?1:.6}/>
+        <circle cx="96" cy="82" r="30" fill="none" stroke="#0ea5e9" strokeWidth=".8" opacity=".3" strokeDasharray="3,2"/>
+        <text x="120" y="115" fill="#0ea5e9" fontSize="8" fontFamily="Inter" fontWeight="500">Bowman's</text>
+      </g>
+      {/* Glomerulus - capillary tuft with fenestrations */}
+      <g className={`hs ${s('glomerulus')?'on':''}`} onClick={()=>setSel('glomerulus')} opacity={act('glomerulus')}>
+        <circle cx="96" cy="82" r="18" fill="url(#gGlom)" stroke={s('glomerulus')?'#ef4444':'#f87171'} strokeWidth="2" className="pulse-glom"/>
+        {/* Fenestrated capillary loops inside */}
+        <path d="M86 74 Q82 82 88 88" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
+        <path d="M92 72 Q96 80 92 90" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
+        <path d="M100 73 Q104 82 100 90" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
+        <path d="M106 76 Q110 82 106 88" fill="none" stroke="#fff" strokeWidth="1.5" opacity=".4"/>
+        {/* Podocyte foot processes around edge */}
+        {[0,40,80,120,160,200,240,280,320].map((a,i)=>{
+          const r=(a*Math.PI)/180;
+          return <circle key={i} cx={96+Math.cos(r)*21} cy={82+Math.sin(r)*21} r="1.5" fill="#7dd3fc" opacity=".5"/>;
+        })}
+      </g>
+      {/* PCT with brush border texture */}
+      <g className={`hs ${s('pct')?'on':''}`} onClick={()=>setSel('pct')} opacity={act('pct')}>
+        <path d="M100 112 Q100 135 122 135 Q152 135 152 158 Q152 178 122 178 Q88 178 88 198" fill="none" stroke="url(#gPCT)" strokeWidth={s('pct')?7:5} strokeLinecap="round"/>
+        {/* Brush border microvilli ticks */}
+        {[[100,120,0],[110,132,-45],[130,135,-90],[148,142,-90],[152,158,0],[142,172,45],[122,178,90],[100,185,90]].map(([x,y,a],i)=>{
+          const r=(a*Math.PI)/180;
+          return <line key={i} x1={x} y1={y} x2={x+Math.cos(r)*5} y2={y+Math.sin(r)*5} stroke="#10b981" strokeWidth="1" opacity=".4"/>;
+        })}
+        {/* Reabsorption arrows */}
+        <text x="155" y="148" fill="#10b981" fontSize="8" opacity=".7">glucose</text>
+        <text x="155" y="158" fill="#10b981" fontSize="8" opacity=".7">AAs, H2O</text>
+        <path d="M154 150 L162 150" fill="none" stroke="#10b981" strokeWidth="1" opacity=".5" markerEnd="none"/>
+      </g>
+      {/* Descending Loop */}
+      <g className={`hs ${s('desc_loop')?'on':''}`} onClick={()=>setSel('desc_loop')} opacity={act('desc_loop')}>
+        <path d="M88 198 Q86 290 100 340 Q106 365 122 375" fill="none" stroke="url(#gDesc)" strokeWidth={s('desc_loop')?7:5} strokeLinecap="round"/>
+        {/* Water exit arrows */}
+        {[[82,240],[80,270],[84,300],[90,330]].map(([x,y],i)=>(
+          <g key={i} opacity=".5"><path d={`M${x} ${y} L${x-14} ${y}`} fill="none" stroke="#60a5fa" strokeWidth="1.2"/><text x={x-26} y={y+3} fill="#60a5fa" fontSize="7">H2O</text></g>
+        ))}
+      </g>
+      {/* Ascending Loop */}
+      <g className={`hs ${s('asc_loop')?'on':''}`} onClick={()=>setSel('asc_loop')} opacity={act('asc_loop')}>
+        <path d="M122 375 Q142 368 152 338 Q168 280 168 215" fill="none" stroke="url(#gAsc)" strokeWidth={s('asc_loop')?7:5} strokeLinecap="round"/>
+        {/* Salt pump arrows */}
+        {[[172,340],[175,310],[176,280],[174,250]].map(([x,y],i)=>(
+          <g key={i} opacity=".5"><path d={`M${x} ${y} L${x+14} ${y}`} fill="none" stroke="#8b5cf6" strokeWidth="1.2"/><text x={x+16} y={y+3} fill="#8b5cf6" fontSize="7">Na+</text></g>
+        ))}
+        <text x="175" y="368" fill={dark?'#c4b5fd':'#7c3aed'} fontSize="7" opacity=".7" fontWeight="600">WATERPROOF</text>
+      </g>
+      {/* U-turn label */}
+      <path d="M112 378 Q122 390 132 378" fill="none" stroke={dark?'#94a3b8':'#64748b'} strokeWidth="1" strokeLinecap="round"/>
+      <text x="108" y="402" fill={dark?'#94a3b8':'#64748b'} fontSize="7" fontFamily="Inter">U-turn</text>
+      {/* DCT */}
+      <g className={`hs ${s('dct')?'on':''}`} onClick={()=>setSel('dct')} opacity={act('dct')}>
+        <path d="M168 215 Q168 188 190 188 Q222 188 222 168 Q222 148 194 148 Q168 148 168 130" fill="none" stroke="url(#gDCT)" strokeWidth={s('dct')?7:5} strokeLinecap="round"/>
+        <text x="226" y="172" fill="#f59e0b" fontSize="7" opacity=".7">Aldosterone</text>
+        <text x="226" y="182" fill="#f59e0b" fontSize="7" opacity=".7">H+/HCO3-</text>
+      </g>
+      {/* Collecting Duct */}
+      <g className={`hs ${s('collecting')?'on':''}`} onClick={()=>setSel('collecting')} opacity={act('collecting')}>
+        <path d="M168 130 Q180 118 192 118 Q216 118 226 142 Q236 172 236 240 Q236 330 242 395" fill="none" stroke="url(#gCD)" strokeWidth={s('collecting')?7:5} strokeLinecap="round"/>
+        {/* Aquaporin channel markers */}
+        {[[238,180],[240,220],[240,260],[240,300],[241,340]].map(([x,y],i)=>(
+          <rect key={i} x={x} y={y-3} width="6" height="6" rx="1" fill="none" stroke="#06b6d4" strokeWidth=".8" opacity=".5"/>
+        ))}
+        <text x="250" y="265" fill="#06b6d4" fontSize="7" opacity=".7">ADH</text>
+        <text x="250" y="275" fill="#06b6d4" fontSize="7" opacity=".7">aquaporins</text>
+      </g>
+      {/* Vasa Recta */}
+      <g className={`hs ${s('vasa_recta')?'on':''}`} onClick={()=>setSel('vasa_recta')} opacity={act('vasa_recta')}>
+        <path d="M290 165 Q288 290 292 370 Q294 385 300 390 Q306 385 308 370 Q312 290 310 165" fill="none" stroke={s('vasa_recta')?'#e11d48':'#fda4af'} strokeWidth={s('vasa_recta')?4:2.5} strokeLinecap="round"/>
+        <path d="M290 165 Q288 290 292 370" fill="none" stroke="#ef4444" strokeWidth="1" opacity=".3" className="flow-line"/>
+        <path d="M300 390 Q306 385 308 370 Q312 290 310 165" fill="none" stroke="#3b82f6" strokeWidth="1" opacity=".3" className="flow-line" style={{animationDirection:'reverse'}}/>
+        <text x="280" y="158" fill={dark?'#fda4af':'#e11d48'} fontSize="8" fontFamily="Inter">Vasa</text>
+        <text x="280" y="168" fill={dark?'#fda4af':'#e11d48'} fontSize="8" fontFamily="Inter">Recta</text>
+      </g>
+      {/* Animated flow dots along nephron path */}
+      {[['pPCT','#10b981',3],['pDesc','#3b82f6',4],['pAsc','#8b5cf6',4],['pDCT','#f59e0b',3],['pCD','#06b6d4',5]].map(([path,color,dur])=>(
+        <circle key={path} r="3" fill={color} opacity=".8">
+          <animateMotion dur={dur+'s'} repeatCount="indefinite"><mpath href={'#'+path}/></animateMotion>
+        </circle>
+      ))}
+      {/* Labels */}
+      {[["Glomerulus",40,95,'#ef4444'],['PCT',68,155,'#10b981'],['Desc. Loop',18,265,'#3b82f6'],['Asc. Loop',155,295,'#8b5cf6'],['DCT',224,140,'#f59e0b'],['Collecting',248,230,'#06b6d4'],['Duct',260,240,'#06b6d4']].map(([lbl,x,y,fill])=>(
+        <text key={lbl+y} x={x} y={y} fill={fill} fontSize="9" fontWeight="600" fontFamily="Inter">{lbl}</text>
+      ))}
+      {/* Output arrow */}
+      <path d="M242 395 L242 410 L248 405 L242 410 L236 405" fill="none" stroke="#06b6d4" strokeWidth="1.5" strokeLinecap="round"/>
+      <text x="220" y="425" fill={dark?'#67e8f9':'#0891b2'} fontSize="8" fontFamily="Inter">to Renal Pelvis</text>
+    </svg>
+  );
+}
+
+// Pro anatomy SVG number-to-key mappings
+const KNUM={1:'pyramid',3:'artery',4:'vein',5:'hilum',6:'pelvis',7:'ureter',8:'calyces',9:'capsule',13:'cortex',15:'calyces',16:'papilla',17:'column'};
+const NNUM={1:'afferent',2:'bowman',3:'glomerulus',4:'efferent',5:'peritubular',6:'pct',7:'desc_loop',8:'asc_loop',9:'dct',10:'collecting',12:'vasa_recta'};
+const PRO_KIDNEY='https://upload.wikimedia.org/wikipedia/commons/a/ab/KidneyStructures_PioM.svg';
+const PRO_NEPHRON='https://upload.wikimedia.org/wikipedia/commons/5/52/Nephron_illustration.svg';
+
+function ProImage({src,alt,nums,sel,setSel,parts,dark}){
+  return(
+    <div className="w-full flex flex-col items-center gap-2">
+      <div className="rounded-xl overflow-hidden border" style={{background:'#fff',borderColor:dark?'#334155':'#e2e8f0',maxWidth:'380px',width:'100%'}}>
+        <img src={src} alt={alt} className="w-full" style={{minHeight:'200px'}} loading="lazy"
+          onError={e=>{e.target.style.display='none';e.target.nextSibling&&(e.target.nextSibling.style.display='block');}}/>
+        <p className="text-xs text-center py-8 text-slate-400" style={{display:'none'}}>Image unavailable — switch to Animated mode</p>
+      </div>
+      <div className="flex flex-wrap gap-1 justify-center">
+        {Object.entries(nums).map(([n,k])=>{
+          const p=parts[k];if(!p)return null;
+          return(<button key={n} onClick={()=>setSel(k)} title={p.lbl}
+            className="text-xs px-2 py-1 rounded-lg border tr font-semibold"
+            style={sel===k?{background:p.col,color:'#fff',borderColor:p.col}:{borderColor:dark?'#475569':'#d1d5db',color:dark?'#94a3b8':'#64748b'}}>
+            <span className="opacity-50 mr-0.5">{n}.</span>{p.lbl}
+          </button>);
+        })}
+      </div>
+      <p className={`text-xs text-center ${dark?'text-slate-600':'text-slate-400'}`}>
+        Diagram: <a href="https://commons.wikimedia.org" target="_blank" rel="noopener" className="underline">Wikimedia Commons</a> · CC BY-SA 3.0
+      </p>
+    </div>
+  );
+}
+
+function SystemMap({am,dark}){
+  const [view,setView]=useState('macro');
+  const [sel,setSel]=useState('cortex');
+  const [pro,setPro]=useState(false);
+  useEffect(()=>setSel(view==='macro'?'cortex':'glomerulus'),[view]);
+  const parts=view==='macro'?MACRO:MICRO;
+  const info=parts[sel]?.[am?'si':'ac']||{n:'',d:''};
+  const col=parts[sel]?.col||'#0d9488';
+
+  return(
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-center gap-3 flex-wrap">
+        <div className="flex gap-2">
+          {[['macro','Whole Kidney','#0d9488'],['micro','Nephron','#8b5cf6']].map(([v,lbl,c])=>(
+            <button key={v} onClick={()=>setView(v)}
+              className="px-4 py-2 text-xs font-semibold rounded-xl border tr"
+              style={view===v?{background:c,borderColor:c,color:'#fff'}:{borderColor:dark?'#334155':'#e2e8f0',color:dark?'#94a3b8':'#64748b'}}>
+              {lbl}
+            </button>
+          ))}
+        </div>
+        <button onClick={()=>setPro(!pro)}
+          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl border tr ${pro?'bg-amber-500/15 border-amber-500 text-amber-400':'border-slate-300 dark:border-slate-700 text-slate-500'}`}>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          {pro?'Pro Anatomy ✓':'Pro Anatomy'}
+        </button>
+      </div>
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
+        <div className="w-full lg:w-1/2 flex justify-center" style={{minHeight:'280px',maxHeight:pro?'none':'460px'}}>
+          {pro
+            ? (view==='macro'
+              ? <ProImage src={PRO_KIDNEY} alt="Kidney cross-section anatomy" nums={KNUM} sel={sel} setSel={setSel} parts={parts} dark={dark}/>
+              : <ProImage src={PRO_NEPHRON} alt="Nephron anatomy" nums={NNUM} sel={sel} setSel={setSel} parts={parts} dark={dark}/>)
+            : (view==='macro'
+              ? <MacroKidney sel={sel} setSel={setSel} dark={dark}/>
+              : <MicroNephron sel={sel} setSel={setSel} dark={dark}/>)
+          }
+        </div>
+        <div className="w-full lg:w-1/2 flex flex-col gap-3">
+          <div className="p-4 md:p-5 rounded-2xl border" style={{borderColor:col+'44',background:dark?'rgba(30,41,59,.7)':'rgba(241,245,249,.8)'}}>
+            <div className="flex items-center gap-2 mb-2"><div className="w-2.5 h-2.5 rounded-full" style={{background:col}}/><h2 className="text-base md:text-lg font-bold" style={{color:col}}>{info.n}</h2></div>
+            <p className={`text-sm leading-6 ${dark?'text-slate-300':'text-slate-600'}`}>{info.d}</p>
+          </div>
+          {!pro && <div className="flex flex-wrap gap-1.5">
+            {Object.entries(parts).map(([k,p])=>(
+              <button key={k} onClick={()=>setSel(k)} className="text-xs px-2.5 py-1.5 rounded-lg border tr"
+                style={sel===k?{background:p.col,color:'#fff',borderColor:p.col}:{borderColor:dark?'#334155':'#e2e8f0',color:dark?'#94a3b8':'#64748b'}}>
+                {p.lbl}
+              </button>
+            ))}
+          </div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// DEEP DIRECTORY
+function Leaf({label,data,am,active,setActive}){
+  const on=active===label;
+  return(
+    <div onClick={()=>setActive(label,data)} style={{paddingLeft:'18px'}}
+      className={`cursor-pointer flex items-center gap-2 py-1.5 px-2 rounded-lg tr text-xs ${on?'bg-blue-500/20 text-blue-400 font-semibold':'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'}`}>
+      <Ic.File/><span className="truncate">{label}</span>
+    </div>
+  );
+}
+function Branch({label,node,am,active,setActive,depth=0}){
+  const [open,setOpen]=useState(depth<1);
+  if(node.ac)return<Leaf label={label} data={node} am={am} active={active} setActive={setActive}/>;
+  return(
+    <div>
+      <div onClick={()=>setOpen(!open)} style={{paddingLeft:`${depth*12}px`}}
+        className="cursor-pointer flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 tr text-xs font-semibold text-slate-600 dark:text-slate-300">
+        <Ic.Caret o={open}/><Ic.Folder/><span>{label}</span>
+      </div>
+      {open&&<div>{Object.entries(node).map(([k,v])=><Branch key={k} label={k} node={v} am={am} active={active} setActive={setActive} depth={depth+1}/>)}</div>}
+    </div>
+  );
+}
+// DIRECTORY ANIMATIONS
+function DirAnim({label,dark}){
+  const c1=dark?'#0f172a':'#f1f5f9';
+  const c2=dark?'#334155':'#cbd5e1';
+  const anims={
+    'Kidneys':()=>(
+      <svg viewBox="0 0 120 80"><defs><linearGradient id="da1"><stop offset="0%" stopColor="#ef4444"/><stop offset="100%" stopColor="#dc2626"/></linearGradient></defs>
+        <path d="M60 8 C90 8 98 30 92 52 C86 68 74 74 60 74 C46 74 34 68 28 52 C22 30 30 8 60 8Z" fill={dark?'#134e4a':'#ccfbf1'} stroke="#0d9488" strokeWidth="1.5"/>
+        <path d="M20 30 L38 38" stroke="url(#da1)" strokeWidth="3" strokeLinecap="round" className="flow-line"/>
+        <path d="M38 44 L20 52" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" className="flow-line" style={{animationDirection:'reverse'}}/>
+        <text x="2" y="28" fill="#ef4444" fontSize="7">in</text><text x="2" y="58" fill="#3b82f6" fontSize="7">out</text>
+        <circle r="2" fill="#ef4444"><animateMotion dur="2s" repeatCount="indefinite" path="M20,30 L60,40 L60,50 L20,52"/></circle>
+      </svg>),
+    'Ureters':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M60 8 L60 72" stroke="#06b6d4" strokeWidth="8" strokeLinecap="round" opacity=".3"/>
+        {[0,1,2].map(i=><ellipse key={i} cx="60" cy={20+i*22} rx="5" ry="8" fill="none" stroke="#06b6d4" strokeWidth="1.5" opacity=".8" style={{animation:`aSqueeze 1.5s ${i*.5}s ease-in-out infinite`,transformOrigin:'60px '+(20+i*22)+'px'}}/>)}
+        <circle r="3" fill="#fbbf24"><animateMotion dur="2s" repeatCount="indefinite" path="M60,10 L60,72"/></circle>
+        <text x="74" y="44" fill={c2} fontSize="7">peristalsis</text>
+      </svg>),
+    'Urinary Bladder':()=>(
+      <svg viewBox="0 0 120 80">
+        <ellipse cx="60" cy="48" rx="30" ry="24" fill={dark?'#1e3a5f':'#dbeafe'} stroke="#3b82f6" strokeWidth="1.5">
+          <animate attributeName="ry" values="18;24;18" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="rx" values="26;30;26" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
+        <rect x="55" y="68" width="10" height="8" rx="2" fill="#3b82f6" opacity=".5"/>
+        <text x="38" y="50" fill="#3b82f6" fontSize="8" fontWeight="600">~500mL</text>
+        <path d="M44 28 L50 18 M60 26 L60 14 M76 28 L70 18" stroke="#60a5fa" strokeWidth="1" strokeLinecap="round" opacity=".5"/>
+      </svg>),
+    'Urethra':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="52" y="4" width="16" height="72" rx="4" fill={dark?'#1e3a5f':'#dbeafe'} stroke="#3b82f6" strokeWidth="1"/>
+        <rect x="48" y="22" width="24" height="6" rx="2" fill="#ef4444" opacity=".6" style={{animation:'aDoor 3s ease-in-out infinite',transformOrigin:'60px 25px'}}/>
+        <rect x="48" y="48" width="24" height="6" rx="2" fill="#22c55e" opacity=".6" style={{animation:'aDoor 3s 1.5s ease-in-out infinite',transformOrigin:'60px 51px'}}/>
+        <text x="76" y="28" fill="#ef4444" fontSize="6">Internal</text><text x="76" y="35" fill="#ef4444" fontSize="6">(auto)</text>
+        <text x="76" y="53" fill="#22c55e" fontSize="6">External</text><text x="76" y="60" fill="#22c55e" fontSize="6">(you)</text>
+      </svg>),
+    'Excretory':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="35" y="10" width="50" height="60" rx="6" fill="none" stroke={c2} strokeWidth="1" strokeDasharray="3,2"/>
+        <line x1="35" y1="40" x2="85" y2="40" stroke={c2} strokeWidth=".8" strokeDasharray="2,2"/>
+        <text x="42" y="24" fill="#0d9488" fontSize="7">FILTER</text>
+        {[0,1,2].map(i=><circle key={i} r="2.5" fill={i<2?'#22c55e':'#ef4444'}><animateMotion dur="2s" begin={i*.6+'s'} repeatCount="indefinite" path={i<2?'M40,'+(18+i*6)+' L60,'+(18+i*6)+' L60,'+(18+i*6):('M40,32 L60,32 L80,55')}/></circle>)}
+        <text x="4" y="24" fill="#22c55e" fontSize="6">good</text><text x="88" y="58" fill="#ef4444" fontSize="6">waste</text>
+      </svg>),
+    'Regulatory':()=>(
+      <svg viewBox="0 0 120 80">
+        {[['pH',20,'#8b5cf6'],['Na+',50,'#f59e0b'],['BP',80,'#ef4444']].map(([lbl,x,col])=>(
+          <g key={lbl}>
+            <rect x={x} y="16" width="20" height="44" rx="3" fill="none" stroke={col} strokeWidth="1" opacity=".5"/>
+            <rect x={x+4} y="36" width="12" height="22" rx="2" fill={col} opacity=".4">
+              <animate attributeName="height" values="22;12;22" dur="2s" begin={x/80+'s'} repeatCount="indefinite"/>
+              <animate attributeName="y" values="36;46;36" dur="2s" begin={x/80+'s'} repeatCount="indefinite"/>
+            </rect>
+            <text x={x+4} y="12" fill={col} fontSize="7" fontWeight="600">{lbl}</text>
+          </g>
+        ))}
+        <text x="24" y="72" fill={c2} fontSize="6">constantly adjusting</text>
+      </svg>),
+    'Vitamin D Activation':()=>(
+      <svg viewBox="0 0 120 80">
+        <circle cx="20" cy="20" r="10" fill="#fbbf24" opacity=".3" stroke="#fbbf24" strokeWidth="1"/>
+        <text x="14" y="23" fill="#fbbf24" fontSize="8">UV</text>
+        <path d="M32 20 L42 20" stroke={c2} strokeWidth="1" markerEnd="none"/><text x="34" y="17" fill={c2} fontSize="5">&gt;</text>
+        <rect x="44" y="12" width="18" height="16" rx="3" fill="#a855f7" opacity=".3" stroke="#a855f7" strokeWidth="1"/>
+        <text x="46" y="23" fill="#a855f7" fontSize="6">Liver</text>
+        <path d="M64 20 L74 20" stroke={c2} strokeWidth="1"/><text x="66" y="17" fill={c2} fontSize="5">&gt;</text>
+        <rect x="76" y="12" width="22" height="16" rx="3" fill="#0d9488" opacity=".3" stroke="#0d9488" strokeWidth="1"/>
+        <text x="78" y="23" fill="#0d9488" fontSize="6">Kidney</text>
+        <path d="M87 30 L87 40" stroke={c2} strokeWidth="1"/><text x="84" y="38" fill={c2} fontSize="6">v</text>
+        <rect x="72" y="44" width="36" height="16" rx="3" fill="#22c55e" opacity=".2" stroke="#22c55e" strokeWidth="1"/>
+        <text x="74" y="55" fill="#22c55e" fontSize="6.5" fontWeight="600">Calcitriol!</text>
+        <circle r="2" fill="#fbbf24"><animateMotion dur="3s" repeatCount="indefinite" path="M20,20 L50,20 L87,20 L87,52"/></circle>
+      </svg>),
+    'EPO and RBC Control':()=>(
+      <svg viewBox="0 0 120 80">
+        <text x="4" y="16" fill="#ef4444" fontSize="7">Low O2</text>
+        <path d="M32 14 L46 14" stroke={c2} strokeWidth="1"/><text x="36" y="11" fill={c2} fontSize="5">&gt;</text>
+        <ellipse cx="60" cy="14" rx="12" ry="8" fill="#0d9488" opacity=".3" stroke="#0d9488" strokeWidth="1"/>
+        <text x="51" y="17" fill="#0d9488" fontSize="6">Kidney</text>
+        <path d="M60 24 L60 34" stroke={c2} strokeWidth="1"/>
+        <text x="50" y="44" fill="#f59e0b" fontSize="7" fontWeight="600">EPO</text>
+        <path d="M60 48 L60 56" stroke={c2} strokeWidth="1"/>
+        {[0,1,2,3].map(i=><circle key={i} cx={46+i*10} cy="66" r="5" fill="#ef4444" opacity=".5" style={{animation:`aBounce 1s ${i*.2}s ease-in-out infinite`}}/>)}
+        <text x="40" y="78" fill="#ef4444" fontSize="6">more RBCs!</text>
+      </svg>),
+    'Glomerulus':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M8 30 L30 38" stroke="#ef4444" strokeWidth="4" strokeLinecap="round" className="flow-line"/>
+        <circle cx="50" cy="40" r="16" fill="#fca5a5" stroke="#ef4444" strokeWidth="1.5" className="pulse-glom" opacity=".6"/>
+        {[0,60,120,180,240,300].map(a=>{const r=a*Math.PI/180;return <circle key={a} cx={50+Math.cos(r)*19} cy={40+Math.sin(r)*19} r="1.5" fill="#7dd3fc" opacity=".6"/>;})}
+        <path d="M66 38 L84 34" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" className="flow-line" style={{animationDirection:'reverse'}}/>
+        <text x="4" y="26" fill="#ef4444" fontSize="6">wide</text><text x="80" y="30" fill="#f87171" fontSize="6">narrow</text>
+        <text x="34" y="56" fill={c2} fontSize="6">GFR 125mL/min</text>
+        {[0,1,2].map(i=><circle key={i} r="1.5" fill="#fbbf24" opacity=".7"><animateMotion dur="1.5s" begin={i*.5+'s'} repeatCount="indefinite" path="M50,30 L50,60 L70,68"/></circle>)}
+      </svg>),
+    'PCT':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M10 40 L100 40" stroke="#10b981" strokeWidth="6" strokeLinecap="round" opacity=".3"/>
+        {[20,40,60,80].map((x,i)=><line key={i} x1={x} y1={34} x2={x} y2={30} stroke="#10b981" strokeWidth="1" opacity=".5"/>)}
+        <text x="30" y="26" fill="#10b981" fontSize="6">brush border</text>
+        {['Glc','AA','H2O','Na+'].map((lbl,i)=>(
+          <g key={lbl} style={{animation:`aGrab 2s ${i*.4}s ease-in infinite`}}>
+            <circle cx={26+i*20} cy={52+i%2*6} r="4" fill={['#fbbf24','#a78bfa','#3b82f6','#f59e0b'][i]} opacity=".7"/>
+            <text x={21+i*20} y={58+i%2*6} fill={['#fbbf24','#a78bfa','#3b82f6','#f59e0b'][i]} fontSize="5">{lbl}</text>
+          </g>
+        ))}
+        <text x="24" y="76" fill="#10b981" fontSize="7" fontWeight="600">grabs EVERYTHING back</text>
+      </svg>),
+    'Descending Loop':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M40 8 L40 72" stroke="#3b82f6" strokeWidth="6" strokeLinecap="round" opacity=".4"/>
+        <text x="48" y="20" fill={c2} fontSize="6">cortex</text>
+        <line x1="48" y1="35" x2="90" y2="35" stroke={c2} strokeWidth=".5" strokeDasharray="2,2"/>
+        <text x="48" y="50" fill={c2} fontSize="6">medulla</text>
+        {[18,32,48,62].map((y,i)=>(
+          <g key={i}><circle r="2" fill="#3b82f6" opacity=".6" style={{animation:`aPump 1.8s ${i*.4}s ease-out infinite`}}><set attributeName="cx" to="44"/><set attributeName="cy" to={y}/></circle>
+          <text x={64} y={y+2} fill="#3b82f6" fontSize="6" opacity=".5" style={{animation:`aPump 1.8s ${i*.4}s ease-out infinite`}}>H2O</text></g>
+        ))}
+        <text x="48" y="74" fill="#3b82f6" fontSize="6">water exits passively</text>
+      </svg>),
+    'Ascending Loop':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M40 72 L40 8" stroke="#8b5cf6" strokeWidth="6" strokeLinecap="round" opacity=".4"/>
+        <rect x="34" y="4" width="12" height="72" rx="3" fill="none" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="3,2"/>
+        <text x="14" y="14" fill="#8b5cf6" fontSize="6" fontWeight="600">WATERPROOF</text>
+        {[60,44,28,14].map((y,i)=>(
+          <g key={i} style={{animation:`aPump 1.5s ${i*.35}s ease-out infinite`,transformOrigin:'40px '+y+'px'}}>
+            <text x="52" y={y+3} fill="#f59e0b" fontSize="7" fontWeight="600">Na+</text>
+          </g>
+        ))}
+        <text x="52" y="74" fill="#8b5cf6" fontSize="6">pumps salt OUT</text>
+      </svg>),
+    'DCT':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M10 40 L100 40" stroke="#f59e0b" strokeWidth="6" strokeLinecap="round" opacity=".3"/>
+        <text x="22" y="20" fill="#f59e0b" fontSize="7" fontWeight="600">Hormone Orders</text>
+        <rect x="12" y="50" width="40" height="20" rx="4" fill="#f59e0b" opacity=".15" stroke="#f59e0b" strokeWidth=".8"/>
+        <text x="14" y="63" fill="#f59e0b" fontSize="6">Aldosterone</text>
+        <rect x="60" y="50" width="40" height="20" rx="4" fill="#8b5cf6" opacity=".15" stroke="#8b5cf6" strokeWidth=".8"/>
+        <text x="64" y="63" fill="#8b5cf6" fontSize="6">H+/HCO3-</text>
+        <circle r="2" fill="#f59e0b"><animateMotion dur="2s" repeatCount="indefinite" path="M10,40 L30,40 L30,56"/></circle>
+        <circle r="2" fill="#8b5cf6"><animateMotion dur="2s" repeatCount="indefinite" path="M60,40 L80,40 L80,56"/></circle>
+      </svg>),
+    'Collecting Duct':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M40 8 L40 72" stroke="#06b6d4" strokeWidth="8" strokeLinecap="round" opacity=".3"/>
+        <text x="54" y="16" fill="#06b6d4" fontSize="7" fontWeight="600">ADH</text>
+        {[20,35,50,65].map((y,i)=>(
+          <rect key={i} x="46" y={y-3} width="6" height="6" rx="1" fill="none" stroke="#06b6d4" strokeWidth="1" opacity=".7" style={{animation:`aDoor 2.5s ${i*.3}s ease-in-out infinite`,transformOrigin:'49px '+y+'px'}}/>
+        ))}
+        <text x="58" y="38" fill="#06b6d4" fontSize="6">aquaporin</text><text x="58" y="46" fill="#06b6d4" fontSize="6">channels</text>
+        {[22,38,54].map((y,i)=>(
+          <circle key={i} r="2" fill="#3b82f6" opacity=".5" style={{animation:`aPump 2s ${i*.5}s ease-out infinite`,transformOrigin:'44px '+y+'px'}}><set attributeName="cx" to="44"/><set attributeName="cy" to={y}/></circle>
+        ))}
+      </svg>),
+    'ADH':()=>(
+      <svg viewBox="0 0 120 80">
+        <text x="4" y="14" fill="#ef4444" fontSize="7">Dehydrated!</text>
+        <path d="M60 18 L60 30" stroke={c2} strokeWidth="1"/>
+        <ellipse cx="60" cy="12" rx="20" ry="6" fill="#a855f7" opacity=".2" stroke="#a855f7" strokeWidth="1"/>
+        <text x="42" y="15" fill="#a855f7" fontSize="6">hypothalamus</text>
+        <ellipse cx="60" cy="36" rx="16" ry="6" fill="#ec4899" opacity=".2" stroke="#ec4899" strokeWidth="1"/>
+        <text x="46" y="39" fill="#ec4899" fontSize="6">pituitary</text>
+        <path d="M60 42 L60 54" stroke={c2} strokeWidth="1"/>
+        <text x="46" y="58" fill="#06b6d4" fontSize="7" fontWeight="600">ADH</text>
+        <path d="M60 62 L60 72" stroke={c2} strokeWidth="1"/>
+        <text x="32" y="78" fill="#22c55e" fontSize="6">dark concentrated pee</text>
+        <circle r="2" fill="#06b6d4"><animateMotion dur="3s" repeatCount="indefinite" path="M60,12 L60,36 L60,58 L60,72"/></circle>
+      </svg>),
+    'Aldosterone':()=>(
+      <svg viewBox="0 0 120 80">
+        <ellipse cx="30" cy="20" rx="20" ry="10" fill="#f59e0b" opacity=".15" stroke="#f59e0b" strokeWidth="1"/>
+        <text x="16" y="23" fill="#f59e0b" fontSize="6">Adrenal</text>
+        <path d="M50 22 L70 32" stroke={c2} strokeWidth="1"/>
+        <rect x="64" y="30" width="44" height="18" rx="4" fill="#f59e0b" opacity=".1" stroke="#f59e0b" strokeWidth="1"/>
+        <text x="66" y="42" fill="#f59e0b" fontSize="6">DCT: Na+ IN</text>
+        <path d="M86 50 L86 60" stroke={c2} strokeWidth="1"/>
+        <text x="66" y="68" fill="#3b82f6" fontSize="6">H2O follows</text>
+        <text x="66" y="76" fill="#ef4444" fontSize="6">K+ OUT</text>
+        <circle r="2" fill="#f59e0b"><animateMotion dur="2.5s" repeatCount="indefinite" path="M30,20 L70,36 L86,55 L86,68"/></circle>
+      </svg>),
+    'Angiotensin II':()=>(
+      <svg viewBox="0 0 120 80">
+        {['JG cells','Renin','Ang I','ACE','Ang II'].map((lbl,i)=>(
+          <g key={lbl}><rect x={2+i*23} y={10+i%2*14} width="22" height="12" rx="3" fill={i===4?'#ef4444':'#0d9488'} opacity=".2" stroke={i===4?'#ef4444':'#0d9488'} strokeWidth=".8"/>
+          <text x={4+i*23} y={18+i%2*14} fill={i===4?'#ef4444':'#0d9488'} fontSize="5">{lbl}</text>
+          {i<4&&<path d={`M${24+i*23} ${16+i%2*14} L${25+i*23} ${16+(i+1)%2*14}`} stroke={c2} strokeWidth=".8"/>}</g>
+        ))}
+        <text x="4" y="52" fill="#ef4444" fontSize="6" fontWeight="600">5 effects at once:</text>
+        {['vasoconstrict','aldosterone','ADH','thirst','noradrenaline'].map((e,i)=>(
+          <text key={e} x={4+i%3*40} y={62+Math.floor(i/3)*10} fill="#f59e0b" fontSize="5">{e}</text>
+        ))}
+      </svg>),
+    'Renin':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="10" y="20" width="28" height="20" rx="4" fill="#ef4444" opacity=".15" stroke="#ef4444" strokeWidth="1"/>
+        <text x="14" y="33" fill="#ef4444" fontSize="6">JG cell</text>
+        <text x="10" y="16" fill={c2} fontSize="6">Low BP!</text>
+        <path d="M40 30 L56 30" stroke={c2} strokeWidth="1"/><text x="44" y="27" fill={c2} fontSize="6">&gt;</text>
+        <ellipse cx="72" cy="30" rx="14" ry="10" fill="#0d9488" opacity=".2" stroke="#0d9488" strokeWidth="1"/>
+        <text x="62" y="33" fill="#0d9488" fontSize="6">RENIN</text>
+        <path d="M72 42 L72 52" stroke={c2} strokeWidth="1"/>
+        <text x="44" y="62" fill="#f59e0b" fontSize="7" fontWeight="600">RAAS begins!</text>
+        <text x="38" y="74" fill={c2} fontSize="6">first domino falls</text>
+        <circle r="2.5" fill="#ef4444" style={{animation:'aBounce 1s ease-in-out infinite'}}><set attributeName="cx" to="24"/><set attributeName="cy" to="14"/></circle>
+      </svg>),
+    'EPO':()=>anims['EPO and RBC Control'](),
+    'Calcitriol':()=>anims['Vitamin D Activation'](),
+    'Involuntary Reflex':()=>(
+      <svg viewBox="0 0 120 80">
+        <ellipse cx="30" cy="30" rx="20" ry="16" fill="#3b82f6" opacity=".15" stroke="#3b82f6" strokeWidth="1">
+          <animate attributeName="ry" values="14;18;14" dur="2.5s" repeatCount="indefinite"/>
+        </ellipse>
+        <text x="18" y="33" fill="#3b82f6" fontSize="6">stretch!</text>
+        <path d="M52 28 L68 22" stroke={c2} strokeWidth="1"/>
+        <rect x="70" y="14" width="30" height="14" rx="3" fill="#a855f7" opacity=".15" stroke="#a855f7" strokeWidth="1"/>
+        <text x="72" y="24" fill="#a855f7" fontSize="5.5">spinal cord</text>
+        <path d="M85 30 L85 44" stroke={c2} strokeWidth="1"/>
+        <text x="66" y="54" fill="#0d9488" fontSize="6">detrusor</text>
+        <text x="66" y="62" fill="#0d9488" fontSize="6">contracts</text>
+        <path d="M100 22 L110 14" stroke={c2} strokeWidth=".8"/>
+        <text x="96" y="10" fill="#ec4899" fontSize="5">to pons (urge!)</text>
+      </svg>),
+    'Voluntary Response':()=>anims['Urethra'](),
+    'Detrusor Muscle':()=>(
+      <svg viewBox="0 0 120 80">
+        <ellipse cx="60" cy="40" rx="32" ry="26" fill="#3b82f6" opacity=".1" stroke="#3b82f6" strokeWidth="1.5">
+          <animate attributeName="rx" values="32;24;32" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="ry" values="26;20;26" dur="2s" repeatCount="indefinite"/>
+        </ellipse>
+        <text x="40" y="38" fill="#3b82f6" fontSize="7">detrusor</text>
+        <text x="40" y="48" fill="#3b82f6" fontSize="7">squeeze</text>
+        <path d="M60 66 L60 76" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round"/>
+        <circle r="2" fill="#fbbf24"><animateMotion dur="2s" repeatCount="indefinite" path="M60,40 L60,76"/></circle>
+      </svg>),
+    'Sphincters':()=>anims['Urethra'](),
+    'Acidosis Response':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="8" y="10" width="44" height="28" rx="4" fill="#ef4444" opacity=".1" stroke="#ef4444" strokeWidth="1"/>
+        <text x="12" y="22" fill="#ef4444" fontSize="6">Blood: H+ too high</text>
+        <text x="12" y="30" fill="#ef4444" fontSize="6">pH LOW</text>
+        <path d="M54 24 L66 24" stroke={c2} strokeWidth="1"/>
+        <rect x="68" y="10" width="44" height="28" rx="4" fill="#0d9488" opacity=".1" stroke="#0d9488" strokeWidth="1"/>
+        <text x="72" y="22" fill="#0d9488" fontSize="6">DCT ejects H+</text>
+        <text x="72" y="30" fill="#0d9488" fontSize="6">grabs HCO3-</text>
+        <path d="M60 42 L60 54" stroke={c2} strokeWidth="1"/>
+        <text x="30" y="64" fill="#22c55e" fontSize="7" fontWeight="600">pH restored 7.4</text>
+        <circle r="2" fill="#ef4444"><animateMotion dur="2s" repeatCount="indefinite" path="M30,24 L90,24 L60,60"/></circle>
+      </svg>),
+    'Alkalosis Response':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="8" y="10" width="44" height="28" rx="4" fill="#3b82f6" opacity=".1" stroke="#3b82f6" strokeWidth="1"/>
+        <text x="12" y="22" fill="#3b82f6" fontSize="6">Blood: HCO3- high</text>
+        <text x="12" y="30" fill="#3b82f6" fontSize="6">pH HIGH</text>
+        <path d="M54 24 L66 24" stroke={c2} strokeWidth="1"/>
+        <rect x="68" y="10" width="44" height="28" rx="4" fill="#0d9488" opacity=".1" stroke="#0d9488" strokeWidth="1"/>
+        <text x="72" y="22" fill="#0d9488" fontSize="6">DCT ejects HCO3-</text>
+        <text x="72" y="30" fill="#0d9488" fontSize="6">grabs H+</text>
+        <path d="M60 42 L60 54" stroke={c2} strokeWidth="1"/>
+        <text x="30" y="64" fill="#22c55e" fontSize="7" fontWeight="600">pH restored 7.4</text>
+        <circle r="2" fill="#3b82f6"><animateMotion dur="2s" repeatCount="indefinite" path="M30,24 L90,24 L60,60"/></circle>
+      </svg>),
+    'Sodium Balance':()=>(
+      <svg viewBox="0 0 120 80">
+        <rect x="6" y="52" width="76" height="14" rx="3" fill={c2} opacity=".15"/>
+        <rect x="6" y="52" width="50" height="14" rx="3" fill="#10b981" opacity=".3"/>
+        <text x="10" y="62" fill="#10b981" fontSize="6" fontWeight="600">PCT 65%</text>
+        <rect x="56" y="52" width="19" height="14" rx="0" fill="#8b5cf6" opacity=".3"/>
+        <text x="57" y="62" fill="#8b5cf6" fontSize="5.5">Loop 25%</text>
+        <rect x="75" y="52" width="8" height="14" rx="3" fill="#f59e0b" opacity=".5"/>
+        <text x="86" y="62" fill="#f59e0b" fontSize="6" fontWeight="600">DCT 10%</text>
+        <text x="86" y="72" fill="#f59e0b" fontSize="5">aldosterone</text>
+        <text x="20" y="44" fill={c2} fontSize="7" fontWeight="600">Na+ reabsorption split</text>
+        <text x="20" y="22" fill={c2} fontSize="6">that 10% controls your BP</text>
+      </svg>),
+    'GFR':()=>(
+      <svg viewBox="0 0 120 80">
+        <path d="M20 60 A40 40 0 0 1 100 60" fill="none" stroke={c2} strokeWidth="2" opacity=".3"/>
+        {GFR.map((g,i)=>{const a=Math.PI+i*(Math.PI/6);const x=60+Math.cos(a)*38,y=60+Math.sin(a)*38;return <circle key={i} cx={x} cy={y} r="4" fill={g.c} opacity=".6"/>;})}
+        <line x1="60" y1="60" x2="60" y2="28" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" style={{animation:'aSeesaw 3s ease-in-out infinite',transformOrigin:'60px 60px'}}/>
+        <text x="24" y="76" fill={c2} fontSize="7" fontWeight="600">125 mL/min = normal</text>
+      </svg>),
+  };
+  const Anim=anims[label];
+  if(!Anim)return null;
+  return <div className="w-full flex justify-center mb-3" style={{maxHeight:'100px'}}><div style={{width:'180px',height:'100px'}}>{Anim()}</div></div>;
+}
+
+function DeepDir({am,dark}){
+  const [active,setActive]=useState('Kidneys');
+  const [data,setData]=useState(DIR["Organs"]["Kidneys"]);
+  const info=data[am?'si':'ac'];
+  return(
+    <div className="flex flex-col md:flex-row gap-4" style={{minHeight:'320px'}}>
+      <div className={`w-full md:w-72 rounded-xl border flex flex-col overflow-hidden shrink-0 ${dark?'bg-slate-900/60 border-slate-700':'bg-slate-50 border-slate-200'}`} style={{maxHeight:'300px'}}>
+        <div className={`p-3 border-b text-xs font-bold uppercase flex items-center gap-2 ${dark?'border-slate-700 text-slate-500':'border-slate-200 text-slate-400'}`}><Ic.Dir/>Knowledge Base</div>
+        <div className="flex-1 overflow-y-auto p-2">
+          {Object.entries(DIR).map(([k,v])=><Branch key={k} label={k} node={v} am={am} active={active} setActive={(l,d)=>{setActive(l);setData(d);}}/>)}
+        </div>
+      </div>
+      <div className={`flex-1 flex flex-col justify-center p-4 md:p-6 rounded-xl border ${dark?'bg-slate-800/40 border-slate-700':'bg-white border-slate-200'}`}>
+        <DirAnim label={active} dark={dark}/>
+        <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4 text-teal-500">{info.n}</h2>
+        <p className={`text-sm leading-6 md:leading-7 border-l-2 border-teal-500 pl-4 ${dark?'text-slate-300':'text-slate-600'}`}>{info.d}</p>
+      </div>
+    </div>
+  );
+}
+
+// PROCESS FLOW
+// STEP DATA for each flow
+const STEPS={
+  normal:{ac:['Blood arrives via renal artery','Afferent arteriole (wider) creates high hydrostatic pressure','Glomerulus filters at 125 mL/min — proteins and RBCs stay in blood','Filtrate collected in Bowman\'s Capsule','PCT: ALL glucose, amino acids, vitamins reabsorbed. 60-70% water by osmosis','Descending Loop: 20% more water exits by osmosis. 90% total water recovered','Ascending Loop: Na+, K+, Cl- actively pumped out. Builds medullary gradient','DCT: Hormonal fine-tuning — aldosterone, acid/base adjustment','Collecting Duct: ADH sets final volume via aquaporins','Urine drains to renal pelvis, down ureter to bladder','Final urine: 1.5-2 L/day — 96% water, 2% urea, 2% solutes'],
+    si:['Dirty blood arrives at the factory','Pressure builds — wide pipe in, narrow pipe out','Pressure mesh blasts everything small through. Big stuff stays','Catching cup collects the filtrate','Reclaim belt grabs ALL sugar, protein bits, vitamins, 60-70% water','Water slide down — water leaks out passively. 90% saved by U-turn','Salt pumper going up — pumps salt out, makes core salty','Smart adjuster — takes hormone orders, fine-tunes chemistry','Release valve — brain decides final water amount via ADH','Exits kidney, squeezes down pipe to holding tank','Only ~1.5L of pee per day from 180L filtered!']},
+  adh:{ac:['Dehydration — plasma osmolarity rises above 285 mOsm/L','Osmoreceptors in hypothalamus detect the change — cells shrink','Hypothalamus signals posterior pituitary gland','ADH (antidiuretic hormone) released into bloodstream','ADH reaches collecting duct in the kidney','Aquaporin-2 water channels inserted into duct cell membranes','Water reabsorbed from duct into peritubular capillaries','Result: small volume of dark, concentrated urine','Plasma osmolarity falls back to normal range','Negative feedback — ADH release stops'],
+    si:['You\'re dehydrated! Blood is too thick and concentrated','Shrink sensors in hypothalamus fire — cells literally shrink from the concentration','Brain signals the pituitary gland at the base of the skull','ADH hormone released, travels through bloodstream','ADH arrives at the collecting duct in the kidney','ADH opens secret water doors (aquaporins) in duct walls','Water floods BACK into blood from the collecting duct','Result: tiny dark pee!','Blood gets diluted — sensors relax back to normal','Alarm off — no more ADH needed']},
+  raas:{ac:['Low blood pressure detected by JG cells in afferent arteriole','Renin enzyme released from JG cells — first step of RAAS','Renin cleaves angiotensinogen (liver protein) into angiotensin I','ACE in lung capillaries converts angiotensin I to angiotensin II','Effect 1: Vasoconstriction — blood vessels tighten, BP rises immediately','Effect 2: Aldosterone from adrenal cortex — Na+ reabsorption in DCT, water follows','Effect 3: ADH from posterior pituitary — water reabsorption in collecting duct','Effect 4: Thirst sensation triggered — fluid intake increases','Effect 5: Noradrenaline release — additional vasoconstriction','Blood pressure fully restored — negative feedback stops renin'],
+    si:['Blood pressure drops! Kidney pressure sensors (JG cells) fire the alarm','Kidneys release RENIN enzyme — the first domino','Renin chops a liver protein into Angiotensin I','Lungs do the final chop — Angiotensin II, The Boss hormone','Boss squeezes blood vessels tight — BP rises fast','Boss orders adrenal glands: release aldosterone! Grabs more salt, water follows','Boss orders pituitary: release ADH! More water reabsorbed','Boss makes you feel THIRSTY — drink more water','Boss triggers noradrenaline — even more vessel squeezing','Blood pressure back to normal! Alarm system switches off']},
+  acidosis:{ac:['Blood pH drops below 7.35 — acidosis (excess H+ ions)','DCT epithelial cells detect the acidic environment','H+ ions actively secreted FROM blood INTO the tubular lumen','Simultaneously, HCO3- (bicarbonate) reabsorbed FROM tubule INTO blood','H+ exits the body in urine — urine becomes more acidic','HCO3- acts as buffer in blood, neutralising remaining excess H+','Blood pH rises back toward normal range (7.35-7.45)'],
+    si:['Blood is too acidic! Too many H+ ions floating around','DCT cells spot the problem — pH sensors activate','DCT acts as bouncer: throws H+ OUT of blood into the pee tube','At the same time, grabs bicarbonate (natural antacid) FROM tube into blood','H+ leaves with the urine — pee gets more acidic','Bicarbonate neutralises the remaining acid in blood — like Gaviscon','Blood pH back to normal! Crisis averted']},
+  alkalosis:{ac:['Blood pH rises above 7.45 — alkalosis (excess HCO3-)','DCT epithelial cells detect the alkaline environment','HCO3- (bicarbonate) secreted FROM blood INTO the tubular lumen','Simultaneously, H+ ions reabsorbed FROM tubule INTO blood','HCO3- exits the body in urine — urine becomes more alkaline','H+ neutralises excess bicarbonate remaining in blood','Blood pH drops back toward normal range (7.35-7.45)'],
+    si:['Blood is too basic! Too much bicarbonate (HCO3-)','DCT cells spot the opposite problem','DCT flips the script: throws bicarbonate OUT into the pee tube','Grabs H+ ions FROM the tube back into blood','Bicarbonate leaves with the urine — pee gets more alkaline','H+ ions lower the pH back down in blood','Blood pH returns to normal! Kidneys are the ONLY organ that can fully fix this']},
+  epo:{ac:['Low blood oxygen detected — hypoxia (e.g. high altitude, anaemia)','EPOS cells in kidney cortex sense reduced O2 levels','EPOS cells produce and release EPO (erythropoietin) into blood','EPO travels to red bone marrow','Erythrocyte (red blood cell) production increases','More RBCs means more haemoglobin, more O2 carrying capacity','Blood oxygen levels rise back to normal','EPOS cells detect improved O2 — reduce EPO production','Negative feedback loop complete'],
+    si:['Not enough oxygen! Maybe you climbed a mountain or you\'re anaemic','Kidney O2 sensors (EPOS cells) notice the drop','Kidney releases EPO hormone into the bloodstream','EPO travels to bone marrow — the RBC factory','Bone marrow: MAKE MORE RED BLOOD CELLS! Production ramps up','More RBCs = more oxygen trucks in the blood','Oxygen levels recover — problem solved','EPOS cells relax and dial down EPO production','Negative feedback loop complete! System balanced']},
+};
+
+function ProcessFlow({am,dark}){
+  const [sc,setSc]=useState('normal');
+  const [step,setStep]=useState(-1);
+  const [playing,setPlaying]=useState(false);
+  const ref=useRef(null);
+  const ctr=useRef(0);
+  const timerRef=useRef(null);
+  const steps=STEPS[sc]?.[am?'si':'ac']||[];
+  const total=steps.length;
+
+  useEffect(()=>{setStep(-1);setPlaying(false);},[sc,am]);
+
+  // Render mermaid ONLY when scenario, mode, or theme changes — NOT on step
+  useEffect(()=>{
+    if(!window.mermaid||!ref.current)return;
+    const el=ref.current;
+    el.innerHTML='';
+    const id='mm'+(++ctr.current);
+    const def=FLOWS[sc][am?'si':'ac'];
+    mermaid.initialize({startOnLoad:false,theme:dark?'dark':'base',flowchart:{curve:'basis',htmlLabels:true}});
+    try{
+      mermaid.render(id,def,function(svg){
+        if(el){el.innerHTML=svg;
+          // Remove the hidden render element mermaid leaves behind
+          const ghost=document.getElementById('d'+id);if(ghost)ghost.remove();
+        }
+      });
+    }catch(e){el.innerHTML='<p style="color:#f87171;padding:16px;font-size:12px">Diagram rendering error — try switching to another scenario and back.</p>';}
+  },[sc,am,dark]);
+
+  // Highlight nodes separately — this runs on step changes without re-rendering mermaid
+  useEffect(()=>{
+    if(!ref.current)return;
+    const nodes=ref.current.querySelectorAll('.node');
+    if(!nodes.length)return;
+    nodes.forEach((n,i)=>{
+      n.style.transition='opacity .3s, filter .3s';
+      n.style.opacity=step<0||i<=step?'1':'.15';
+      if(i===step){n.style.filter='drop-shadow(0 0 8px rgba(13,148,136,.8))';}
+      else{n.style.filter='none';}
+    });
+  },[step]);
+
+  useEffect(()=>{
+    if(playing&&step<total-1){timerRef.current=setTimeout(()=>setStep(s=>s+1),2200);}
+    else if(step>=total-1)setPlaying(false);
+    return()=>clearTimeout(timerRef.current);
+  },[playing,step,total]);
+
+  const play=()=>{if(step>=total-1)setStep(0);else if(step<0)setStep(0);setPlaying(true);};
+  const pause=()=>setPlaying(false);
+  const next=()=>{setPlaying(false);setStep(s=>Math.min(s+1,total-1));};
+  const prev=()=>{setPlaying(false);setStep(s=>Math.max(s-1,0));};
+  const reset=()=>{setPlaying(false);setStep(-1);};
+
+  return(
+    <div className="flex flex-col gap-4" style={{minHeight:'320px'}}>
+      {/* Scenario selector */}
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {Object.entries(FLOWS).map(([k,s])=>(
+          <button key={k} onClick={()=>setSc(k)}
+            className={`px-3 py-2 rounded-xl border tr text-xs font-semibold whitespace-nowrap shrink-0 ${sc===k?'bg-teal-500/10 border-teal-500 text-teal-400':'border-slate-200 dark:border-slate-700 text-slate-500 hover:border-slate-400'}`}>
+            <span className="mr-1">{s.emoji}</span>{s.lbl}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Diagram */}
+        <div className={`flex-1 rounded-xl border flex items-start justify-center p-3 overflow-auto ${dark?'bg-slate-900/50 border-slate-800':'bg-slate-50 border-slate-200'}`} style={{minHeight:'280px'}}>
+          <div ref={ref} className="w-full flex justify-center" style={{minHeight:'200px'}}/>
+        </div>
+        {/* Controls + narration */}
+        <div className="w-full lg:w-64 shrink-0 flex flex-col gap-3">
+          <div className={`p-3 rounded-xl text-xs leading-5 ${dark?'bg-slate-800/60 text-slate-400':'bg-slate-100 text-slate-500'}`}>{FLOWS[sc].desc}</div>
+          {/* Playback */}
+          <div className="flex items-center gap-2 justify-center">
+            <button onClick={reset} className={`p-2 rounded-lg tr ${dark?'hover:bg-slate-800 text-slate-400':'hover:bg-slate-200 text-slate-500'}`} title="Reset">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+            <button onClick={prev} disabled={step<=0} className={`p-2 rounded-lg tr ${step<=0?'opacity-30 cursor-not-allowed':'hover:bg-slate-200 dark:hover:bg-slate-800'} ${dark?'text-slate-400':'text-slate-500'}`}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button onClick={playing?pause:play} className="px-5 py-2 rounded-xl text-xs font-semibold bg-teal-500 text-white hover:bg-teal-600 tr">
+              {playing?'Pause':step<0?'Play':'Resume'}
+            </button>
+            <button onClick={next} disabled={step>=total-1} className={`p-2 rounded-lg tr ${step>=total-1?'opacity-30 cursor-not-allowed':'hover:bg-slate-200 dark:hover:bg-slate-800'} ${dark?'text-slate-400':'text-slate-500'}`}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          {/* Progress */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-slate-500 font-mono w-10 text-right">{step<0?'—':step+1}/{total}</span>
+            <div className={`flex-1 h-1.5 rounded-full ${dark?'bg-slate-800':'bg-slate-200'}`}>
+              <div className="h-full rounded-full bg-teal-500 tr" style={{width:`${step<0?0:((step+1)/total)*100}%`}}/>
+            </div>
+          </div>
+          {/* Narration */}
+          {step>=0&&(
+            <div className={`p-3 rounded-xl border text-xs leading-5 ${dark?'bg-teal-900/20 border-teal-800/40 text-teal-300':'bg-teal-50 border-teal-200 text-teal-700'}`} style={{animation:'primerIn .3s ease-out'}}>
+              <span className="font-bold text-teal-400">Step {step+1}: </span>{steps[step]}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// CLINICAL LAB
+const DIPSTICK=[
+  {pad:'Glucose',color:'#22c55e',abnColor:'#7c3aed',normal:'Negative',abnormal:'Positive = Glycosuria',detail:'PCT SGLT2 transporters reabsorb all glucose. Blood glucose >180 mg/dL saturates them. Main cause: diabetes mellitus. SGLT2 inhibitor drugs intentionally cause this to treat diabetes.'},
+  {pad:'Protein',color:'#22c55e',abnColor:'#ef4444',normal:'Negative',abnormal:'Positive = Proteinuria',detail:'Proteins too large for glomerular filter. Positive = filter is DAMAGED. Causes: hypertension, diabetic nephropathy, glomerulonephritis. Major red flag for kidney disease.'},
+  {pad:'Nitrites',color:'#f8fafc',abnColor:'#ec4899',normal:'Negative',abnormal:'Positive = Nitrituria',detail:'Gram-negative bacteria (E. coli, Klebsiella) convert urinary nitrates to nitrites. Catching bacteria red-handed. Combined with leukocytes = near-certain UTI.'},
+  {pad:'Ketones',color:'#22c55e',abnColor:'#f97316',normal:'Negative',abnormal:'Positive = Ketonuria',detail:'Body burning fat instead of glucose produces ketone waste. Causes: uncontrolled diabetes, starvation, keto diet. Diabetic ketoacidosis (DKA) = life-threatening emergency.'},
+  {pad:'Blood',color:'#fbbf24',abnColor:'#dc2626',normal:'Negative',abnormal:'Positive = Hematuria',detail:'RBCs far too large for normal filtration. Should NEVER be in urine. Causes: kidney stones scraping tubes, UTI, cancer, trauma. Always needs investigation.'},
+  {pad:'WBCs',color:'#22c55e',abnColor:'#a855f7',normal:'Negative',abnormal:'Positive = Pyuria',detail:'Leukocytes in urine = immune system fighting a urinary tract battle. Almost always means infection (UTI). Persistent pyuria despite antibiotics: consider TB of urinary tract.'},
+  {pad:'pH',color:'#3b82f6',abnColor:'#3b82f6',normal:'4.5 - 8.0',abnormal:'Normal range varies',detail:'Normal urine pH 4.5-8.0. Acidosis: kidneys excrete H+, urine more acidic. Alkalosis: kidneys excrete HCO3-, urine more alkaline. Diet also affects pH.'},
+  {pad:'Sp. Gravity',color:'#06b6d4',abnColor:'#06b6d4',normal:'1.005-1.030',abnormal:'Concentration indicator',detail:'How concentrated the urine is. Low = dilute (overhydrated or kidney can\'t concentrate). High = concentrated (dehydrated or ADH active). Tells you about hydration and kidney function.'},
+];
+
+function ClinicalLab({am,dark}){
+  const [tab,setTab]=useState('urine');
+  const [selPad,setSelPad]=useState(null);
+  const [abnMode,setAbnMode]=useState(false);
+  const [gfrVal,setGfrVal]=useState(125);
+  const gfrStage=gfrVal>=90?0:gfrVal>=60?1:gfrVal>=45?2:gfrVal>=30?3:gfrVal>=15?4:5;
+  return(
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {[['urine','Urine Dipstick'],['gfr','GFR Explorer'],['uti','UTI Breakdown']].map(([id,lbl])=>(
+          <button key={id} onClick={()=>setTab(id)}
+            className={`px-4 py-2 text-xs font-semibold rounded-xl border tr whitespace-nowrap shrink-0 ${tab===id?'bg-amber-500/10 border-amber-500 text-amber-400':'border-slate-200 dark:border-slate-700 text-slate-500'}`}>
+            {lbl}
+          </button>
+        ))}
+      </div>
+
+      {tab==='urine'&&(
+        <div className="flex flex-col gap-4">
+          {/* Toggle normal/abnormal */}
+          <div className="flex items-center gap-3">
+            <span className={`text-xs font-semibold ${!abnMode?'text-green-400':'text-slate-500'}`}>Normal</span>
+            <button onClick={()=>setAbnMode(!abnMode)} className={`relative inline-flex h-5 w-10 items-center rounded-full tr ${abnMode?'bg-red-500':'bg-green-500'}`}>
+              <span className={`inline-block h-3 w-3 transform rounded-full bg-white tr ${abnMode?'translate-x-6':'translate-x-1'}`}/>
+            </button>
+            <span className={`text-xs font-semibold ${abnMode?'text-red-400':'text-slate-500'}`}>Abnormal</span>
+            <span className={`text-[10px] ${dark?'text-slate-600':'text-slate-400'} ml-2`}>Tap a pad to learn more</span>
+          </div>
+          {/* Dipstick visual */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className={`rounded-xl p-4 flex gap-1.5 items-end justify-center ${dark?'bg-slate-900/60':'bg-slate-100'}`} style={{minHeight:'180px'}}>
+              {/* Stick body */}
+              <div className="flex flex-col items-center gap-1.5">
+                <div className={`w-10 h-3 rounded-t-lg ${dark?'bg-slate-700':'bg-slate-300'}`}/>
+                {DIPSTICK.map((d,i)=>(
+                  <button key={i} onClick={()=>setSelPad(i)}
+                    className={`w-10 h-8 rounded tr flex items-center justify-center text-[7px] font-bold text-white cursor-pointer border-2 ${selPad===i?'border-white scale-110':'border-transparent hover:scale-105'}`}
+                    style={{background:abnMode?d.abnColor:d.color,textShadow:'0 1px 2px rgba(0,0,0,.5)'}}>
+                    {d.pad.slice(0,4)}
+                  </button>
+                ))}
+                <div className={`w-10 h-6 rounded-b-lg ${dark?'bg-slate-700':'bg-slate-300'}`}/>
+              </div>
+              {/* Labels */}
+              <div className="flex flex-col gap-1.5 ml-2" style={{paddingTop:'12px'}}>
+                {DIPSTICK.map((d,i)=>(
+                  <div key={i} className={`h-8 flex items-center text-xs cursor-pointer tr ${selPad===i?(dark?'text-white font-bold':'text-slate-900 font-bold'):(dark?'text-slate-400':'text-slate-500')}`}
+                    onClick={()=>setSelPad(i)}>
+                    {d.pad}: <span className="ml-1 font-mono text-[10px]" style={{color:abnMode?d.abnColor:d.color}}>{abnMode?d.abnormal:d.normal}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Detail panel */}
+            <div className={`flex-1 p-4 rounded-xl border ${dark?'bg-slate-800/40 border-slate-700':'bg-white border-slate-200'}`}>
+              {selPad!==null?(
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 rounded" style={{background:abnMode?DIPSTICK[selPad].abnColor:DIPSTICK[selPad].color}}/>
+                    <h3 className="text-sm font-bold" style={{color:abnMode?DIPSTICK[selPad].abnColor:DIPSTICK[selPad].color}}>{DIPSTICK[selPad].pad}</h3>
+                  </div>
+                  <p className={`text-xs leading-6 ${dark?'text-slate-300':'text-slate-600'}`}>{DIPSTICK[selPad].detail}</p>
+                </div>
+              ):(
+                <div className={`flex items-center justify-center h-full text-xs ${dark?'text-slate-600':'text-slate-400'}`}>
+                  <p>Tap any coloured pad on the dipstick to see what it tests for and what abnormal results mean.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='gfr'&&(
+        <div className="flex flex-col gap-4">
+          <div className={`p-4 rounded-xl text-sm leading-6 ${dark?'bg-slate-800/60 text-slate-300':'bg-slate-100 text-slate-600'}`}>
+            <strong className="text-teal-400">GFR</strong> = how fast kidneys filter blood. Drag the slider to explore each stage. Normal = <strong>125 mL/min</strong>. Estimated from serum creatinine + age + sex + weight.
+          </div>
+          {/* Slider */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-4">
+              <span className={`text-xs ${dark?'text-slate-500':'text-slate-400'}`}>0</span>
+              <input type="range" min="0" max="130" value={gfrVal} onChange={e=>setGfrVal(+e.target.value)}
+                className="flex-1 h-2 rounded-full appearance-none cursor-pointer"
+                style={{background:`linear-gradient(to right, #dc2626 0%, #ef4444 12%, #f97316 23%, #eab308 35%, #84cc16 46%, #22c55e 69%, #22c55e 100%)`}}/>
+              <span className={`text-xs ${dark?'text-slate-500':'text-slate-400'}`}>130</span>
+            </div>
+            <div className="text-center">
+              <span className="text-3xl font-display font-bold" style={{color:GFR[gfrStage].c}}>{gfrVal}</span>
+              <span className={`text-sm ml-1 ${dark?'text-slate-400':'text-slate-500'}`}>mL/min</span>
+            </div>
+          </div>
+          {/* Stage cards - active one highlighted */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {GFR.map((s,i)=>(
+              <div key={s.s} className={`p-4 rounded-xl border tr ${i===gfrStage?'ring-2 scale-[1.02]':'opacity-50'} ${dark?'bg-slate-800/50':'bg-white'}`}
+                style={{borderColor:s.c+(i===gfrStage?'':'44'),ringColor:i===gfrStage?s.c:'transparent'}}>
+                <div className="flex justify-between mb-1">
+                  <span className="text-xs font-bold" style={{color:s.c}}>Stage {s.s}</span>
+                  <span className="text-xs font-mono" style={{color:s.c}}>{s.r} mL/min</span>
+                </div>
+                <p className={`text-xs ${dark?'text-slate-400':'text-slate-500'}`}>{s.l}</p>
+              </div>
+            ))}
+          </div>
+          {/* Clinical note for current stage */}
+          <div className={`p-3 rounded-xl border text-xs leading-5 ${dark?'border-slate-700 text-slate-400':'border-slate-200 text-slate-500'}`}>
+            {gfrStage===0&&'Normal kidney function. Creatinine clearance is healthy. No action needed.'}
+            {gfrStage===1&&'Mildly decreased. Often age-related. Monitor annually. Lifestyle modifications may help.'}
+            {gfrStage===2&&'Mild to moderate decrease. Investigate underlying cause. Control blood pressure and diabetes. Refer to nephrologist.'}
+            {gfrStage===3&&'Moderate to severe decrease. Active management required. Restrict protein and potassium. Prepare for possible dialysis planning.'}
+            {gfrStage===4&&'Severely decreased. Pre-dialysis planning. Transplant workup should begin. Strict dietary control.'}
+            {gfrStage===5&&'Kidney failure. Dialysis or kidney transplant required to sustain life. eGFR <15 = end-stage renal disease (ESRD).'}
+          </div>
+        </div>
+      )}
+
+      {tab==='uti'&&(
+        <div className="flex flex-col gap-4">
+          {/* Visual comparison */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {title:'Female',color:'#f43f5e',len:'4 cm',svg:(
+                <svg viewBox="0 0 100 100" className="w-20 h-20 mx-auto mb-2">
+                  <ellipse cx="50" cy="30" rx="24" ry="18" fill="#f43f5e" opacity=".15" stroke="#f43f5e" strokeWidth="1.5"/>
+                  <text x="36" y="34" fill="#f43f5e" fontSize="7">bladder</text>
+                  <rect x="46" y="48" width="8" height="16" rx="2" fill="#f43f5e" opacity=".3" stroke="#f43f5e" strokeWidth="1"/>
+                  <text x="58" y="58" fill="#f43f5e" fontSize="6">4cm</text>
+                  {[0,1,2].map(i=><circle key={i} r="2" fill="#ef4444"><animateMotion dur="1s" begin={i*.3+'s'} repeatCount="indefinite" path="M50,66 L50,48 L50,30"/></circle>)}
+                  <text x="22" y="78" fill={dark?'#fda4af':'#be123c'} fontSize="6" fontWeight="600">bacteria reach fast!</text>
+                </svg>),
+              points:['4 cm urethra — bacteria reach bladder in minutes','Adjacent to vagina and anus — high contamination risk','E. coli from gut flora is the #1 cause','Trigone area prone to persistent infection','~50% of women get at least one UTI in their lifetime']},
+              {title:'Male',color:'#3b82f6',len:'20 cm',svg:(
+                <svg viewBox="0 0 100 100" className="w-20 h-20 mx-auto mb-2">
+                  <ellipse cx="50" cy="16" rx="24" ry="14" fill="#3b82f6" opacity=".15" stroke="#3b82f6" strokeWidth="1.5"/>
+                  <text x="36" y="20" fill="#3b82f6" fontSize="7">bladder</text>
+                  <rect x="46" y="30" width="8" height="54" rx="2" fill="#3b82f6" opacity=".2" stroke="#3b82f6" strokeWidth="1"/>
+                  <text x="58" y="58" fill="#3b82f6" fontSize="6">20cm</text>
+                  <circle r="2" fill="#ef4444"><animateMotion dur="3s" repeatCount="indefinite" path="M50,84 L50,60 L50,40"/>
+                    <animate attributeName="opacity" values="1;1;0" dur="3s" repeatCount="indefinite"/>
+                  </circle>
+                  <text x="16" y="96" fill={dark?'#93c5fd':'#1d4ed8'} fontSize="6" fontWeight="600">bacteria usually fail</text>
+                </svg>),
+              points:['20 cm urethra — 5x further for bacteria to travel','Immune system has much more time to destroy bacteria','Opening further from contamination sources','UTIs rarer but more likely to signal structural issues','Older men: enlarged prostate causes urinary retention, raising UTI risk']},
+            ].map(c=>(
+              <div key={c.title} className={`p-4 rounded-xl border ${dark?'bg-slate-800/50 border-slate-700':'bg-white border-slate-200'}`}>
+                <h3 className="font-bold mb-1 text-sm text-center" style={{color:c.color}}>{c.title} — {c.len}</h3>
+                {c.svg}
+                <ul className="text-xs space-y-1.5 text-slate-500 dark:text-slate-400">{c.points.map((p,i)=><li key={i} className="leading-4">• {p}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+          <div className={`p-4 rounded-xl text-xs leading-6 border ${dark?'bg-amber-900/20 border-amber-800/40 text-amber-300':'bg-amber-50 border-amber-200 text-amber-700'}`}>
+            <strong>Dipstick UTI diagnosis:</strong> Nitrites (bacteria converting nitrates) + Leukocyte esterase (WBC enzyme) = high suspicion for UTI. Urine culture confirms bacteria species and antibiotic sensitivity.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// CANVAS
+function Canvas({dark}){
+  const ref=useRef(null);
+  const [drawing,setDrawing]=useState(false);
+  const [ch,setCh]=useState(0);
+  const [col,setCol]=useState('#38bdf8');
+  const [sz,setSz]=useState(3);
+  const [eraser,setEraser]=useState(false);
+  const history=useRef([]);
+  const CHAL=[
+    {t:'Challenge 1: Full Nephron Path',d:"Draw the complete journey: Glomerulus to Bowman's to PCT to descending loop to ascending loop to DCT to collecting duct. Label what each section reabsorbs or secretes."},
+    {t:'Challenge 2: ADH Feedback Loop',d:'Draw: Dehydration to osmoreceptors in hypothalamus to posterior pituitary to ADH to collecting duct to aquaporins open to water reabsorbed to osmolarity drops to ADH stops. Show the negative feedback arrow.'},
+    {t:'Challenge 3: RAAS Cascade',d:'Draw: Low BP to JG cells to renin to angiotensinogen to angiotensin I to ACE to angiotensin II. Then show the 5 effects: vasoconstriction, aldosterone, ADH, thirst, noradrenaline.'},
+    {t:'Challenge 4: Acid-Base Correction',d:'Draw two boxes side by side: (1) Acidosis: DCT secretes H+, reabsorbs HCO3-. (2) Alkalosis: DCT secretes HCO3-, reabsorbs H+.'},
+    {t:'Challenge 5: EPO Negative Feedback',d:'Draw: Hypoxia to kidney EPOS cells to EPO released to red bone marrow to more RBCs to more O2 to EPOS cells reduce EPO. Circle the negative feedback.'},
+  ];
+  const saveState=()=>{const c=ref.current;if(c){history.current.push(c.getContext('2d').getImageData(0,0,c.width,c.height));if(history.current.length>30)history.current.shift();}};
+  const undo=()=>{const c=ref.current;if(!c||history.current.length===0)return;const d=c.getContext('2d');if(history.current.length===1){d.clearRect(0,0,c.width,c.height);history.current=[];}else{history.current.pop();d.putImageData(history.current[history.current.length-1],0,0);}};
+  const pos=e=>{const r=ref.current.getBoundingClientRect();const t=e.touches?.[0]||e;return[(t.clientX-r.left)*(ref.current.width/r.width),(t.clientY-r.top)*(ref.current.height/r.height)];};
+  const start=e=>{e.preventDefault();saveState();const[x,y]=pos(e);const c=ref.current.getContext('2d');c.beginPath();c.moveTo(x,y);setDrawing(true);};
+  const move=e=>{if(!drawing)return;e.preventDefault();const[x,y]=pos(e);const c=ref.current.getContext('2d');
+    if(eraser){c.globalCompositeOperation='destination-out';c.lineWidth=sz*4;}
+    else{c.globalCompositeOperation='source-over';c.lineWidth=sz;c.strokeStyle=col;}
+    c.lineTo(x,y);c.lineCap='round';c.lineJoin='round';c.stroke();};
+  const stop=()=>{if(drawing){const c=ref.current.getContext('2d');c.globalCompositeOperation='source-over';}setDrawing(false);};
+  const clear=()=>{saveState();const c=ref.current;c.getContext('2d').clearRect(0,0,c.width,c.height);};
+  const save=()=>{const c=ref.current;if(!c)return;const a=document.createElement('a');a.download='urinary-system-drawing.png';a.href=c.toDataURL();a.click();};
+  const resize=()=>{const c=ref.current;if(!c)return;const d=c.getContext('2d');const img=d.getImageData(0,0,c.width,c.height);c.width=c.offsetWidth;c.height=c.offsetHeight;d.putImageData(img,0,0);};
+  useEffect(()=>{const c=ref.current;c.width=c.offsetWidth;c.height=c.offsetHeight;window.addEventListener('resize',resize);
+    const kb=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}};
+    window.addEventListener('keydown',kb);return()=>{window.removeEventListener('resize',resize);window.removeEventListener('keydown',kb);};},[]);
+  const COLS=['#38bdf8','#4ade80','#f97316','#f43f5e','#a78bfa','#fbbf24','#f8fafc','#1e293b'];
+  return(
+    <div className="flex flex-col gap-3 w-full">
+      <div className={`p-3 rounded-xl text-xs leading-5 ${dark?'bg-purple-900/20 border border-purple-800/30 text-purple-300':'bg-purple-50 border border-purple-200 text-purple-700'}`}>
+        <button onClick={()=>setCh(c=>(c+1)%CHAL.length)} className="text-left w-full">
+          <span className="font-bold">{CHAL[ch].t}: </span>{CHAL[ch].d}
+          <span className="block text-[10px] mt-1 opacity-60">Tap here for next challenge</span>
+        </button>
+      </div>
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex gap-1.5 flex-wrap">{COLS.map(c=>(
+          <button key={c} onClick={()=>{setCol(c);setEraser(false);}}
+            className={`w-8 h-8 md:w-6 md:h-6 rounded-full border-2 tr ${!eraser&&col===c?'ring-2 ring-offset-1 ring-teal-400':''}`}
+            style={{background:c,borderColor:!eraser&&col===c?'white':'transparent'}}/>
+        ))}</div>
+        <div className={`h-6 w-px ${dark?'bg-slate-700':'bg-slate-300'}`}/>
+        <select value={sz} onChange={e=>setSz(+e.target.value)} className={`text-xs px-2 py-1.5 rounded-lg border ${dark?'bg-slate-800 border-slate-700 text-slate-300':'bg-white border-slate-200 text-slate-600'}`}>
+          <option value={1}>Fine</option><option value={3}>Normal</option><option value={6}>Thick</option><option value={12}>Brush</option>
+        </select>
+        <button onClick={()=>setEraser(!eraser)}
+          className={`text-xs px-3 py-1.5 rounded-lg border tr font-semibold ${eraser?'bg-amber-500/20 border-amber-500 text-amber-400':'border-slate-200 dark:border-slate-700 text-slate-500 hover:border-slate-400'}`}>
+          {eraser?'Eraser ON':'Eraser'}
+        </button>
+        <div className={`h-6 w-px ${dark?'bg-slate-700':'bg-slate-300'}`}/>
+        <button onClick={undo} className={`text-xs px-2.5 py-1.5 rounded-lg border tr ${dark?'border-slate-700 text-slate-400 hover:bg-slate-800':'border-slate-200 text-slate-500 hover:bg-slate-100'}`} title="Undo">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h10a5 5 0 015 5v2M3 10l4-4m-4 4l4 4"/></svg>
+        </button>
+        <button onClick={save} className={`text-xs px-2.5 py-1.5 rounded-lg border tr ${dark?'border-slate-700 text-slate-400 hover:bg-slate-800':'border-slate-200 text-slate-500 hover:bg-slate-100'}`} title="Save as PNG">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        </button>
+        <button onClick={clear} className="flex items-center gap-1 text-xs px-3 py-1.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 tr ml-auto"><Ic.Trash/>Clear</button>
+      </div>
+      <canvas ref={ref}
+        onMouseDown={start} onMouseMove={move} onMouseUp={stop} onMouseLeave={stop}
+        onTouchStart={start} onTouchMove={move} onTouchEnd={stop}
+        className={`w-full rounded-xl border ${eraser?'cursor-cell':'cursor-crosshair'} ${dark?'bg-slate-900 border-slate-700':'bg-white border-slate-200'}`}
+        style={{height:'50vh',minHeight:'280px',maxHeight:'500px',touchAction:'none'}}/>
+    </div>
+  );
+}
+
+// APP
+function App(){
+  const [am,setAm]=useState(false);
+  const [dark,setDark]=useState(true);
+  const [tab,setTab]=useState('map');
+  const [showPrimer,setShowPrimer]=useState(()=>{try{return !localStorage.getItem('ush_seen')}catch(e){return true}});
+  const dismissPrimer=()=>{setShowPrimer(false);try{localStorage.setItem('ush_seen','1')}catch(e){}};
+  useEffect(()=>{document.body.style.backgroundColor=dark?'#020617':'#f8fafc';},[dark]);
+  const TABS=[{id:'map',lbl:'System Map',icon:<Ic.Map/>},{id:'dir',lbl:'Deep Directory',icon:<Ic.Dir/>},{id:'flow',lbl:'Process Flow',icon:<Ic.Flow/>},{id:'lab',lbl:'Clinical Lab',icon:<Ic.Lab/>},{id:'canvas',lbl:'Canvas',icon:<Ic.Draw/>}];
+  return(
+    <div className={dark?'dark':''}>
+      {showPrimer&&<Primer dark={dark} onDismiss={dismissPrimer}/>}
+      <div className="min-h-screen text-slate-800 dark:text-slate-50 font-sans flex flex-col p-3 md:p-6 main-wrap">
+        <div className="max-w-7xl mx-auto w-full flex flex-col gap-4 flex-1">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2"><div className="h-2 w-2 rounded-full bg-teal-500" style={{boxShadow:'0 0 10px rgba(13,148,136,.9)'}}/><span className="text-xs font-bold uppercase tracking-widest text-slate-500">Urinary System Hub</span></div>
+            <div className="flex items-center gap-1">
+              <button onClick={()=>setShowPrimer(true)} className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 tr text-slate-500" title="Show guide">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </button>
+              <button onClick={()=>setDark(!dark)} className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 tr text-slate-500">{dark?<Ic.Sun/>:<Ic.Moon/>}</button>
+            </div>
+          </div>
+          <header className={`rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row justify-between items-center gap-3 md:gap-4 ${dark?'gd':'gl'}`}>
+            <div className="text-center sm:text-left">
+              <h1 className="text-lg md:text-2xl font-display font-bold">{am?'City Water Treatment Network':'Renal System and Urinary Tract'}</h1>
+              <p className="text-xs text-slate-500 mt-1">{am?'Simple analogy mode - everything explained simply':'Filter 180 L blood/day to 1.5 L urine. Regulate BP, pH, electrolytes, RBCs, Vitamin D'}</p>
+            </div>
+            <div className="flex items-center gap-3 bg-slate-100/60 dark:bg-slate-900/60 px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shrink-0">
+              <span className={`text-xs font-semibold ${am?'text-teal-400':'text-slate-400'}`}>Simple</span>
+              <button onClick={()=>setAm(!am)} className={`relative inline-flex h-5 w-10 items-center rounded-full tr ${am?'bg-slate-600':'bg-teal-500'}`}>
+                <span className={`inline-block h-3 w-3 transform rounded-full bg-white tr ${am?'translate-x-1':'translate-x-6'}`}/>
+              </button>
+              <span className={`text-xs font-semibold ${!am?'text-teal-400':'text-slate-400'}`}>Academic</span>
+            </div>
+          </header>
+          <nav className="desktop-tabs flex gap-1 overflow-x-auto border-b border-slate-200 dark:border-slate-800">
+            {TABS.map(t=>(
+              <button key={t.id} onClick={()=>setTab(t.id)}
+                className={`flex whitespace-nowrap items-center gap-1.5 px-4 py-2.5 text-xs font-semibold tr border-b-2 rounded-t-lg ${tab===t.id?'text-teal-400 border-teal-500 bg-teal-500/10':`text-slate-500 border-transparent ${dark?'hover:text-slate-300 hover:bg-slate-800/40':'hover:text-slate-700 hover:bg-slate-100'}`}`}>
+                {t.icon}{t.lbl}
+              </button>
+            ))}
+          </nav>
+          <main className={`rounded-2xl flex-grow flex flex-col p-3 md:p-6 ${dark?'gd':'gl'}`}>
+            {tab==='map'&&<SystemMap am={am} dark={dark}/>}
+            {tab==='dir'&&<DeepDir am={am} dark={dark}/>}
+            {tab==='flow'&&<ProcessFlow am={am} dark={dark}/>}
+            {tab==='lab'&&<ClinicalLab am={am} dark={dark}/>}
+            {tab==='canvas'&&<Canvas dark={dark}/>}
+          </main>
+        </div>
+      </div>
+      {/* Mobile Bottom Nav */}
+      <nav className="mobile-bnav fixed bottom-0 left-0 right-0 z-40 items-center justify-around py-2 px-1 border-t"
+        style={{background:dark?'rgba(15,23,42,.95)':'rgba(255,255,255,.95)',backdropFilter:'blur(12px)',borderColor:dark?'rgba(51,65,85,.6)':'rgba(203,213,225,.8)'}}>
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)}
+            className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg tr min-w-0 flex-1 ${tab===t.id?'text-teal-400':'text-slate-500'}`}>
+            {t.icon}
+            <span className="text-[10px] font-semibold truncate w-full text-center">{t.lbl}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
